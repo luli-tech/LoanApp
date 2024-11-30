@@ -1,0 +1,89 @@
+/* ConfirmationDialog.css */
+.confirmation-dialog-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.confirmation-dialog {
+  background: #fff;
+  border-radius: 10px;
+  padding: 25px 20px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.4s ease-in-out;
+}
+
+.dialog-title {
+  font-size: 22px;
+  color: #2e7d32;
+  margin-bottom: 15px;
+}
+
+.dialog-info {
+  font-size: 16px;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.dialog-details {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+}
+
+.confirm-btn {
+  background: #2e7d32;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.confirm-btn:hover {
+  background: #1b5e20;
+}
+
+.cancel-btn {
+  background: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.cancel-btn:hover {
+  background: #d32f2f;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

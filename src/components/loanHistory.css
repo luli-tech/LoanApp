@@ -1,0 +1,39 @@
+/* Loan History */
+.loan-history {
+  padding: 20px;
+  background-color: #fff;
+}
+
+.loan-history h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+*::-webkit-scrollbar {
+  display: none;
+}
+
+.loan-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  overflow: scroll;
+}
+
+.loan-history-table th,
+.loan-history-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+  max-width: 10px;
+  overflow: scroll;
+}
+
+.loan-history-table th {
+  background-color: #f9f9f9;
+  font-weight: bold;
+}
+
+.loan-history-table tr:nth-child(even) {
+  background-color: #f1f1f1;
+}

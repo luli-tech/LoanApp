@@ -1,0 +1,31 @@
+/* Responsive Styles */
+.outlet {
+  min-height: 100vh;
+  padding-top: 50px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  outline: none;
+}
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  .loan-application-form,
+  .user-profile,
+  .transaction-summary {
+    width: 100%;
+    max-width: none;
+    padding: 15px;
+  }
+
+  .loan-history-table th,
+  .loan-history-table td {
+    padding: 10px;
+  }
+}

@@ -1,0 +1,32 @@
+/* Transaction Summary */
+.transaction-summary {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.transaction-summary h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.transaction-summary p {
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.transaction-summary button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.transaction-summary button:hover {
+  background-color: #0056b3;
+}

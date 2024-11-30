@@ -1,0 +1,113 @@
+.loan-app-container {
+  font-family: Arial, sans-serif;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #f9fbff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.app-title {
+  text-align: center;
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.loan-amount-section,
+.loan-tenure-section,
+.loan-summary,
+.repayment-schedule {
+  margin-bottom: 20px;
+}
+
+h2,
+h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.loan-amount-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.amount-btn {
+  font-size: 24px;
+  font-weight: bold;
+  background: #e0e7ff;
+  color: #1e3a8a;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.amount-display {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 10px;
+  color: #1e3a8a;
+}
+
+.loan-range {
+  text-align: center;
+  font-size: 14px;
+  color: #888;
+}
+
+.tenure-options {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tenure-btn {
+  width: 48%;
+  padding: 10px;
+  background: #e0e7ff;
+  color: #1e3a8a;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+}
+
+.tenure-btn.active {
+  background: #2563eb;
+  color: white;
+}
+
+.tenure-btn:disabled {
+  background: #ddd;
+  color: #888;
+  cursor: not-allowed;
+}
+
+.loan-summary p,
+.repayment-schedule p {
+  font-size: 14px;
+  color: #555;
+}
+
+.apply-btn {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.apply-btn:hover {
+  background: #1d4ed8;
+}
