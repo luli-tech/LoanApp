@@ -57,6 +57,7 @@ const LoanApplicationForm = () => {
       getLoans({
         loan: {
           id: v4(),
+
           loanAmount: loanAmount,
           tenure: tenure,
           interestRate: `${interestRate * 100}%`, // Corrected line
@@ -67,7 +68,14 @@ const LoanApplicationForm = () => {
       })
     );
 
-    setopen(!open); // alert("Loan successfully applied!");
+    let active = ActiveUser.approved?.find(
+      (approved) => approved.status === "approved"
+    );
+    if (active) {
+      return;
+    } else {
+      setopen(!open);
+    } // alert("Loan successfully applied!");
   };
 
   return (

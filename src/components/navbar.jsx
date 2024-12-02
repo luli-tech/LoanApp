@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./navbar.css";
 import { Outlet } from "react-router-dom";
 import Footer from "./footer";
@@ -12,6 +12,9 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { ActiveUser } = useSelector((state) => state.user); // Destructure ActiveUser from state
+  let balance = ActiveUser?.approved?.filter((user) => user.approved !== "approved")
+    .map((m) => m.loanAmount)
+    .reduce((a, b) => a + b, 0);
 
   // Toggle Sidebar
   const toggleSidebar = () => {
@@ -51,6 +54,7 @@ const Navbar = () => {
             <p className="user-status">
               {ActiveUser ? "Active" : "Not Logged In"}
             </p>
+            <p>Balance:${balance}</p>
           </div>
 
           <ul className="sidebar-menu">

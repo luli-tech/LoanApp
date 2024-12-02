@@ -126,12 +126,12 @@ const userSlice = createSlice({
       const { age, loans = [], approved = [] } = state.ActiveUser;
 
       if (!age) {
-        console.log("Please, update your age");
+        alert("Please, update your age");
         return;
       }
 
       if (age < 18) {
-        console.log("You're too young to borrow; you're not eligible");
+        alert("You're too young to borrow; you're not eligible");
         return;
       }
 
@@ -139,19 +139,26 @@ const userSlice = createSlice({
         console.log("This loan is already approved");
         return;
       }
-
-      const updatedUser = {
-        ...state.ActiveUser,
-        approved: [...approved, action.payload],
-      };
-
-      state.ActiveUser = updatedUser;
-      state.user = state.user.map((user) =>
-        user.id === updatedUser.id ? updatedUser : user
+      let activeLoan = state.ActiveUser?.approved?.find(
+        (active) => active.status === "approved"
       );
+      if (activeLoan) {
+        alert("you have an active loan");
+        return;
+      } else {
+        const updatedUser = {
+          ...state.ActiveUser,
+          approved: [...approved, action.payload],
+        };
 
-      safeSetItem("activeUser", updatedUser);
-      safeSetItem("users", state.user);
+        state.ActiveUser = updatedUser;
+        state.user = state.user.map((user) =>
+          user.id === updatedUser.id ? updatedUser : user
+        );
+
+        safeSetItem("activeUser", updatedUser);
+        safeSetItem("users", state.user);
+      }
     },
   },
 });
