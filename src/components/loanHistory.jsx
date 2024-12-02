@@ -3,9 +3,11 @@ import { useSelector } from "react-redux";
 
 const LoanHistory = () => {
   let { ActiveUser } = useSelector((state) => state.user);
-  let { approved, loans } = ActiveUser;
+  let { approved, loans } = ActiveUser || { approved: [], loans: [] }
   let total = [...approved, ...loans];
-  let history = total.reduce((acc, currentLoan) => {
+
+
+  let history = total?.reduce((acc, currentLoan) => {
     const existingLoanIndex = acc.findIndex(
       (loan) => loan.id === currentLoan.id
     );
@@ -43,7 +45,7 @@ const LoanHistory = () => {
               <td>{loan.status}</td>
               <td>{loan.id}</td>
               <td>${loan.interest}</td>
-              <td>{loan.loanAmount}</td>
+              <td>{loan.loanAmountDue}</td>
             </tr>
           ))}
         </tbody>
