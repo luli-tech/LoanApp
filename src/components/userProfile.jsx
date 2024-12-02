@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./userprofile.css";
+import "./userProfile.css";
 import { useSelector, useDispatch } from "react-redux";
 import { setProfile } from "./store";
 
