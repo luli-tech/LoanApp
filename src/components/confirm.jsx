@@ -1,5 +1,5 @@
 import React from "react";
-import "./Confirm.css";
+import "./confirm.css";
 import { useSelector, useDispatch } from "react-redux";
 import { confirmLoan } from "./store";
 import { useEffect } from "react";
