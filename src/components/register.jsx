@@ -1,87 +1,101 @@
-import "./register.css";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useNavigate, NavLink } from "react-router-dom";
 import { newUser } from "./store";
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import "./register.css";
+import Error from "./error";
+
 const Register = () => {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  let [getuser, setgetUser] = useState({
+  const [userDetails, setUserDetails] = useState({
     name: "",
     email: "",
     password: "",
   });
-  let { user, redirect } = useSelector((state) => state.user);
+  const { user, redirect, message } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (redirect) {
-      navigate(redirect)
+      navigate(redirect);
     }
-    console.log(user);
-  }, [redirect]);
-  function getSetname(e) {
-    setgetUser({
-      ...getuser,
+  }, [redirect, navigate]);
+
+  const handleChange = (e) => {
+    setUserDetails({
+      ...userDetails,
       [e.target.name]: e.target.value,
     });
-  }
-  function getRegister() {
+  };
+
+  const handleRegister = (e) => {
+    e.preventDefault();
     dispatch(
       newUser({
-        name: getuser.name,
-        email: getuser.email,
-        password: getuser.password,
+        name: userDetails.name,
+        email: userDetails.email,
+        password: userDetails.password,
       })
     );
-    getuser.name = "";
-    getuser.email = "";
-    getuser.password = "";
-  }
+    setUserDetails({ name: "", email: "", password: "" });
+  };
+
   return (
-    <div className="register-form">
-      <h2>Create an Account</h2>
-      <form onClick={(e) => e.preventDefault()}>
-        <div className="form-group">
-          <label>Name</label>
-          <input
-            value={getuser.name}
-            type="text"
-            name="name"
-            placeholder="Enter your name"
-            onChange={getSetname}
-          />
+    <div className="body">
+      <div className="register-container">
+        <div className="register-left">
+          <div className="register-content">
+            <h2>Create an Account</h2>
+            <form onSubmit={handleRegister}>
+              <div className="form-group">
+                <label>Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={userDetails.name}
+                  onChange={handleChange}
+                  placeholder="Enter your name"
+                />
+              </div>
+              <div className="form-group">
+                <label>Email Address</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={userDetails.email}
+                  onChange={handleChange}
+                  placeholder="Enter your email"
+                />
+              </div>
+              <div className="form-group">
+                <label>Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={userDetails.password}
+                  onChange={handleChange}
+                  placeholder="Enter your password"
+                />
+              </div>
+              <button type="submit" className="btn-primary">
+                Register
+              </button>
+            </form>
+            <NavLink to="/login" className="login-link">
+              Already have an account? Login
+            </NavLink>
+          </div>
         </div>
-        <div className="form-group">
-          <label>Email Address</label>
-          <input
-            value={getuser.email}
-            onChange={getSetname}
-            type="email"
-            name="email"
-            placeholder="Enter your email"
-          />
+        <div className="register-right">
+          <div className="illustration">
+            <img
+              src="https://via.placeholder.com/400x400" /* Replace with your illustration */
+              alt="Illustration"
+            />
+          </div>
         </div>
-        <div className="form-group">
-          <label>Password</label>
-          <input
-            value={getuser.password}
-            name="password"
-            onChange={getSetname}
-            type="password"
-            placeholder="Enter your password"
-          />
-        </div>
-        <button
-          onClick={() => getRegister()}
-          type="submit"
-          className="cta-primary"
-        >
-          Register
-        </button>
-      </form>
-      <NavLink to="/login">Alredy have an account? Login</NavLink>
+      </div>
+      {message && <Error />}
     </div>
   );
 };

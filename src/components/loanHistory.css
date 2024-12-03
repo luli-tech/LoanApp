@@ -1,39 +1,70 @@
-/* Loan History */
 .loan-history {
-  padding: 20px;
-  background-color: #fff;
+  padding: 10px;
+  font-family: Arial, sans-serif;
+  color: #333;
+  background-color: #f9f9f9; /* Light background */
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  max-width: 1000px; /* Constrain max width */
+  margin: 20px auto; /* Center the container */
+  overflow-x: scroll;
 }
 
 .loan-history h2 {
   font-size: 24px;
-  font-weight: bold;
   margin-bottom: 20px;
-}
-*::-webkit-scrollbar {
-  display: none;
+  text-align: center;
+  color: #444;
 }
 
 .loan-history-table {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  overflow: scroll;
+  border-collapse: collapse; /* Remove cell spacing */
+  background-color: #fff; /* Table background */
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
 .loan-history-table th,
 .loan-history-table td {
-  padding: 12px;
+  padding: 12px 15px; /* Add spacing inside cells */
   text-align: left;
-  border: 1px solid #ddd;
-  max-width: 10px;
-  overflow: scroll;
+  font-size: 14px;
 }
 
 .loan-history-table th {
-  background-color: #f9f9f9;
+  background-color: #4caf50; /* Header background */
+  color: #fff; /* White text for header */
+  text-transform: uppercase;
   font-weight: bold;
 }
 
-.loan-history-table tr:nth-child(even) {
-  background-color: #f1f1f1;
+.loan-history-table td {
+  border-bottom: 1px solid #ddd; /* Row separator */
+}
+
+.loan-history-table tr:hover {
+  background-color: #f1f1f1; /* Highlight rows on hover */
+}
+
+.loan-history-table td:nth-child(2),
+.loan-history-table td:nth-child(5),
+.loan-history-table td:nth-child(6) {
+  color: #007bff; /* Highlight monetary fields */
+  font-weight: bold;
+}
+
+.loan-history-table td:nth-child(3) {
+  text-transform: capitalize; /* Capitalize loan status */
+}
+
+.loan-history-table tr:last-child td {
+  border-bottom: none; /* Remove border for the last row */
+}
+
+.loan-history p {
+  text-align: center;
+  color: #888;
+  font-size: 16px;
 }

@@ -1,6 +1,7 @@
 import "./App.css";
+import 'aos/dist/aos.css';
+import AOS from 'aos';
 import Navbar from "./components/navbar";
-// import TransactionSummary from "./transactionSummary";
 import TermsAndConditions from "./components/TermsConditions";
 import FAQ from "./components/faq";
 import LoanApplicationForm from "./components/loanApplication";
@@ -15,8 +16,9 @@ import SuccessMessage from "./components/successmessage";
 import LoanApplication from "./components/approve";
 import ConfirmationDialog from "./components/confirm";
 import Spinner from "./components/spinner";
+import Typewriter from "./components/typewriter";
 import Error from "./components/error";
-
+import { useEffect, useMemo } from "react";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -24,9 +26,21 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-
 function App() {
-  let router = createBrowserRouter(
+  // Memoizing the AOS configuration
+  const aosConfig = useMemo(() => ({
+    duration: 2000, // Animation duration in milliseconds
+    once: true,     // Whether animation should happen only once
+  }), []); // Empty dependency array means it will not change after initial load
+
+  useEffect(() => {
+    AOS.init(aosConfig); // Initialize AOS with the memoized configuration
+    return () => {
+      AOS.refresh(); // Refresh AOS when the component unmounts
+    };
+  }, [aosConfig]); // Effect runs when aosConfig changes (though it's memoized and won't change)
+
+  const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Navbar />}>
         <Route index element={<Homepage />} />
@@ -43,10 +57,12 @@ function App() {
         <Route path="/summary" element={<TransactionSummary />} />
         <Route path="/success" element={<SuccessMessage />} />
         <Route path="/ask" element={<LoanApplication />} />
+        <Route path="/type" element={<Typewriter />} />
         <Route path="/confirm" element={<ConfirmationDialog />} />
       </Route>
     )
   );
+
   return <RouterProvider router={router} />;
 }
 

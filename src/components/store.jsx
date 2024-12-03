@@ -147,7 +147,7 @@ const userSlice = createSlice({
         user.id === updatedUser.id ? updatedUser : user
       );
 
-      state.message = "Loan successfully applied!";
+      // state.message = "Loan successfully applied!";
       safeSetItem("activeUser", updatedUser);
       safeSetItem("users", state.user);
     },

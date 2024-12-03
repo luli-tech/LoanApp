@@ -14,10 +14,10 @@ const UserProfile = () => {
     address: "",
     email: "",
     phone: "",
-    image: "", // Add image to state
+    image: "",
   });
 
-  // Initialize profile data from ActiveUser or localStorage
+  // Initialize profile data
   useEffect(() => {
     if (ActiveUser) {
       setProfileState({
@@ -27,20 +27,12 @@ const UserProfile = () => {
         address: ActiveUser.address || "",
         email: ActiveUser.email || "",
         phone: ActiveUser.phone || "",
-        image: ActiveUser.image || "", // Fetch image from ActiveUser if available
+        image: ActiveUser.image || "",
       });
-    } else {
-      const savedImage = localStorage.getItem("profileImage");
-      if (savedImage) {
-        setProfileState((prevState) => ({
-          ...prevState,
-          image: savedImage, // Load image from localStorage if available
-        }));
-      }
     }
   }, [ActiveUser]);
 
-  // Handle profile input changes
+  // Handle input changes
   const handleInputChange = (e) => {
     setProfileState({
       ...profile,
@@ -48,13 +40,21 @@ const UserProfile = () => {
     });
   };
 
-  // Handle saving profile to Redux store
+  // Handle profile save
   const handleSaveProfile = () => {
-    dispatch(setProfile(profile)); // Dispatch updated profile to Redux
+    const { name, age, email, phone } = profile;
+
+    // Basic input validation
+    if (!name || !email || !phone || isNaN(age) || age <= 0) {
+      alert("Please fill in all required fields with valid data.");
+      return;
+    }
+
+    dispatch(setProfile(profile));
     setIsEditing(false);
   };
 
-  // Handle image upload and convert to base64
+  // Handle image upload
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -64,14 +64,9 @@ const UserProfile = () => {
       }
       const reader = new FileReader();
       reader.onloadend = () => {
-        const base64Image = reader.result; // Convert image to base64
-        setProfileState({
-          ...profile,
-          image: base64Image, // Set the base64 image in profile state
-        });
-        localStorage.setItem("profileImage", base64Image); // Save base64 image to localStorage
+        setProfileState({ ...profile, image: reader.result });
       };
-      reader.readAsDataURL(file); // Convert file to base64
+      reader.readAsDataURL(file);
     }
   };
 
@@ -83,100 +78,117 @@ const UserProfile = () => {
   return (
     <div className="profile-container">
       <div className="profile-card">
+        {/* Profile Header */}
         <div className="profile-header">
           <img
+            src={profile.image || "https://via.placeholder.com/150"}
             alt="Profile"
             className="profile-image"
-            src={profile.image || "default-image-url.jpg"} // Display the uploaded image or a default image
           />
-          <div className="profile-name">
+          <div className="profile-info">
             {isEditing ? (
               <input
                 type="text"
-                onChange={handleInputChange}
-                value={profile.name}
                 name="name"
-                placeholder="Name"
+                value={profile.name}
+                placeholder="Enter your name"
                 className="profile-input"
+                onChange={handleInputChange}
               />
             ) : (
-              <h2>{profile.name}</h2>
+              <h2>{profile.name || "Your Name"}</h2>
             )}
             {isEditing ? (
               <input
                 type="number"
-                value={profile.age}
-                onChange={handleInputChange}
                 name="age"
-                placeholder="Age"
+                value={profile.age}
+                placeholder="Enter your age"
                 className="profile-input"
+                onChange={handleInputChange}
               />
             ) : (
-              <p>Age: {profile.age}</p>
+              <p>Age: {profile.age || "Not Specified"}</p>
             )}
           </div>
         </div>
+
+        {/* Profile Details */}
         <div className="profile-details">
+          <h3>Contact Information</h3>
           {isEditing ? (
             <>
               <input
                 type="email"
-                onChange={handleInputChange}
-                value={profile.email}
                 name="email"
-                placeholder="Email"
+                value={profile.email}
+                placeholder="Enter your email"
                 className="profile-input"
+                onChange={handleInputChange}
               />
               <input
                 type="text"
-                value={profile.phone}
-                onChange={handleInputChange}
                 name="phone"
-                placeholder="Phone"
+                value={profile.phone}
+                placeholder="Enter your phone number"
                 className="profile-input"
-              />
-              <input
-                type="text"
-                value={profile.gender}
                 onChange={handleInputChange}
-                name="gender"
-                placeholder="Gender"
-                className="profile-input"
-              />
-              <input
-                type="text"
-                value={profile.address}
-                onChange={handleInputChange}
-                name="address"
-                placeholder="Address"
-                className="profile-input"
               />
             </>
           ) : (
             <>
-              <p>Gender: {profile.gender}</p>
-              <p>Email: {profile.email}</p>
-              <p>Phone: {profile.phone}</p>
-              <p>Address: {profile.address}</p>
+              <p>Email: {profile.email || "Not Specified"}</p>
+              <p>Phone: {profile.phone || "Not Specified"}</p>
+            </>
+          )}
+
+          <h3>Additional Details</h3>
+          {isEditing ? (
+            <>
+              <input
+                type="text"
+                name="gender"
+                value={profile.gender}
+                placeholder="Enter your gender"
+                className="profile-input"
+                onChange={handleInputChange}
+              />
+              <input
+                type="text"
+                name="address"
+                value={profile.address}
+                placeholder="Enter your address"
+                className="profile-input"
+                onChange={handleInputChange}
+              />
+            </>
+          ) : (
+            <>
+              <p>Gender: {profile.gender || "Not Specified"}</p>
+              <p>Address: {profile.address || "Not Specified"}</p>
             </>
           )}
         </div>
+
+        {/* Upload Image */}
         {isEditing && (
-          <div className="upload-image">
+          <div className="upload-section">
             <label htmlFor="image-upload" className="upload-btn">
-              Upload Image
+              Upload New Profile Picture
             </label>
             <input
               id="image-upload"
               type="file"
               accept="image/*"
-              onChange={handleImageUpload} // Handle the file upload
+              onChange={handleImageUpload}
             />
           </div>
         )}
+
+        {/* Action Buttons */}
         <div className="profile-actions">
           <button onClick={toggleEditMode} className="edit-btn">
-            {isEditing ? "Cancel" : "Edit"}
+            {isEditing ? "Cancel" : "Edit Profile"}
           </button>
           {isEditing && (
             <button onClick={handleSaveProfile} className="save-btn">

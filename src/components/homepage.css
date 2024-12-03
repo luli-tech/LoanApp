@@ -2,6 +2,7 @@
 body {
   margin: 0;
   font-family: "Arial", sans-serif;
+  background: #e3f2fd;
 }
 
 .homepage {
@@ -15,9 +16,10 @@ body {
   align-items: center;
   justify-content: center;
   height: 100vh;
+  gap: 30px;
   text-align: center;
-  background: url("https://source.unsplash.com/featured/?banking,finance")
-    no-repeat center center/cover;
+  background: url("/cloud-banking-a-cloud-bank-of-benefits.webp") no-repeat
+    center center/cover;
   color: white;
   position: relative;
 }
@@ -36,7 +38,11 @@ body {
 .hero-content {
   position: relative;
   z-index: 2;
+  align-items: center;
   max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
   padding: 0 20px;
 }
 

@@ -1,29 +1,43 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./confirm.css";
 import { useSelector, useDispatch } from "react-redux";
-import { confirmLoan } from "./store";
-import { useEffect } from "react";
+import { confirmLoan, resetredirect } from "./store";
 import { useNavigate } from "react-router-dom";
-import { resetredirect } from "./store";
+import Swal from "sweetalert2";
 import Error from "./error";
 
 const ConfirmationDialog = ({ setopen, open }) => {
     let navigate = useNavigate();
-    let { message } = useSelector(state => state.user)
-    console.log(message)
     const dispatch = useDispatch();
-    const { ActiveUser, redirect } = useSelector((state) => state.user);
-    const { id, interest, interestRate, loanAmount, tenure, totalAmountDue } =
-        ActiveUser.loans[ActiveUser.loans.length - 1];
+    const { message, ActiveUser, redirect } = useSelector((state) => state.user);
+
+    const loanDetails = ActiveUser?.loans?.length
+        ? ActiveUser.loans[ActiveUser.loans.length - 1]
+        : null;
+
+    const {
+        id = null,
+        interest = 0,
+        interestRate = 0,
+        loanAmount = 0,
+        tenure = 0,
+        totalAmountDue = 0,
+    } = loanDetails || {};
+
     let date = new Date().toLocaleDateString();
+
+    // Handle redirect after loan confirmation
     useEffect(() => {
         if (redirect) {
-            navigate(redirect)
-            dispatch(resetredirect)
+            navigate(redirect);
+            dispatch(resetredirect());
         }
-        console.log(ActiveUser);
-    }, [redirect]);
+    }, [redirect, navigate, dispatch]);
+
     function confirm() {
+        if (!loanDetails) return;
+
+        // Dispatch loan confirmation
         dispatch(
             confirmLoan({
                 id,
@@ -36,6 +50,21 @@ const ConfirmationDialog = ({ setopen, open }) => {
                 status: "approved",
             })
         );
+
+        // Display SweetAlert2 success message
+        Swal.fire({
+            icon: "success",
+            title: "Loan Confirmed!",
+            text: `You have successfully borrowed ₦${loanAmount.toLocaleString()} at a ${interestRate} interest rate. Please ensure timely repayment.`,
+            confirmButtonText: "OK",
+        });
+
+        // Close the dialog
+        setopen(false);
+    }
+
+    if (!loanDetails) {
+        return <div>No active loan details available to confirm.</div>;
     }
 
     return (

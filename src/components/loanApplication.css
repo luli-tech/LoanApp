@@ -1,113 +1,130 @@
+/* General Styling */
 .loan-app-container {
-  font-family: Arial, sans-serif;
-  max-width: 500px;
-  margin: 20px auto;
+  font-family: "Arial", sans-serif;
   padding: 20px;
-  background: #f9fbff;
+  max-width: 600px;
+  margin: 0 auto;
+  background: #f9f9f9;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.bod {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 .app-title {
+  font-size: 28px;
+  color: #2c3e50;
   text-align: center;
-  font-size: 24px;
-  color: #333;
   margin-bottom: 20px;
 }
 
-.loan-amount-section,
-.loan-tenure-section,
-.loan-summary,
-.repayment-schedule {
+/* Loan Amount Section */
+.loan-amount-section {
   margin-bottom: 20px;
 }
 
-h2,
-h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
-  color: #555;
-}
-
-.loan-amount-control {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 10px;
-}
-
-.amount-btn {
-  font-size: 24px;
-  font-weight: bold;
-  background: #e0e7ff;
-  color: #1e3a8a;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-}
-
-.amount-display {
+.loan-amount-section h2 {
   font-size: 20px;
-  font-weight: bold;
-  margin: 0 10px;
-  color: #1e3a8a;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.loan-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 18px;
+  border: 2px solid #2c3e50;
+  border-radius: 5px;
+  margin-bottom: 10px;
 }
 
 .loan-range {
-  text-align: center;
   font-size: 14px;
-  color: #888;
+  color: #7f8c8d;
+}
+
+/* Tenure Options */
+.loan-tenure-section h2 {
+  font-size: 20px;
+  color: #2c3e50;
+  margin-bottom: 10px;
 }
 
 .tenure-options {
   display: flex;
-  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .tenure-btn {
-  width: 48%;
-  padding: 10px;
-  background: #e0e7ff;
-  color: #1e3a8a;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: bold;
+  flex: 1;
+  padding: 15px;
   text-align: center;
+  border: 2px solid #2c3e50;
+  border-radius: 5px;
+  background: #ecf0f1;
+  color: #2c3e50;
+  font-size: 16px;
   cursor: pointer;
+  transition: background 0.3s, color 0.3s;
 }
 
 .tenure-btn.active {
-  background: #2563eb;
-  color: white;
+  background: #2c3e50;
+  color: #ecf0f1;
 }
 
 .tenure-btn:disabled {
-  background: #ddd;
-  color: #888;
+  background: #bdc3c7;
+  color: #ffffff;
   cursor: not-allowed;
 }
-
-.loan-summary p,
-.repayment-schedule p {
-  font-size: 14px;
-  color: #555;
+.tenure-btn:hover {
+  background: #34495e;
+  color: #ffffff;
 }
 
+/* Loan Summary */
+.loan-summary {
+  margin-top: 20px;
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #bdc3c7;
+}
+
+.loan-summary h3 {
+  font-size: 18px;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.loan-summary p {
+  font-size: 16px;
+  margin: 5px 0;
+  color: #34495e;
+}
+
+/* Apply Button */
 .apply-btn {
   width: 100%;
-  padding: 15px;
-  font-size: 16px;
-  font-weight: bold;
-  background: #2563eb;
-  color: white;
+  padding: 10px;
+  background: #2c3e50;
+  color: #ffffff;
+  font-size: 18px;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background 0.3s;
 }
 
 .apply-btn:hover {
-  background: #1d4ed8;
+  background: #34495e;
 }

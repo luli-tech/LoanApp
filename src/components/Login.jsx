@@ -1,75 +1,84 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "./store";
 import "./login.css";
-import { resetredirect } from "./store";
-import { useNavigate } from "react-router-dom";
-import { NavLink } from "react-router-dom";
 import Error from "./error";
+import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
-  let dispatch = useDispatch();
-  let navigate = useNavigate();
-  let { user, ActiveUser, redirect, message } = useSelector((state) => state.user);
-  let [users, setUser] = useState({
+  let navigate = useNavigate()
+  function register() {
+    navigate('/')
+  }
+  const dispatch = useDispatch();
+  const { message, redirect } = useSelector((state) => state.user);
+
+  const [users, setUser] = useState({
     email: "",
     password: "",
-  })
-
+  });
   useEffect(() => {
     if (redirect) {
-      const timer = setTimeout(() => {
-        navigate(redirect);
-        dispatch(resetredirect());
-      }, 2000);
-
-      return () => clearTimeout(timer); // Cleanup the timer to prevent memory leaks
+      navigate(redirect)
     }
-  }, [redirect, navigate, dispatch]);
+  }, [redirect])
 
-  function trackLogin(e) {
+  const trackLogin = (e) => {
     setUser({ ...users, [e.target.name]: e.target.value });
-  }
-  useEffect(() => {
-    console.log(ActiveUser);
-  });
-  function getUser(e) {
+  };
+
+  const getUser = (e) => {
     e.preventDefault();
     dispatch(login(users));
-    console.log(user);
-  }
-  return (
-    <div className="login-form">
-      <h2>Login</h2>
-      <form onSubmit={getUser}>
-        <div className="form-group">
-          <label>Email Address</label>
-          <input
-            type="email"
-            name="email"
-            value={users.email}
-            onChange={trackLogin}
-            placeholder="Enter your email"
-          />
-        </div>
-        <div className="form-group">
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            value={users.password}
-            onChange={trackLogin}
-            placeholder="Enter your password"
-          />
-        </div>
+  };
 
-        <button type="submit" className="cta-primary">
-          Login
-        </button>
-      </form>
-      <div>
-        <NavLink to="/register">Don't have an account? Register</NavLink>
+  return (
+    <div className="body">
+      <div className="login-container">
+        <div className="login-left">
+          <div className="logo">
+            <h1>Loan App</h1>
+          </div>
+          <form onSubmit={getUser} className="login-form">
+            <h2>Login</h2>
+            <div className="form-group">
+              <label>Email Address</label>
+              <input
+                type="email"
+                name="email"
+                value={users.email}
+                onChange={trackLogin}
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Password</label>
+              <input
+                type="password"
+                name="password"
+                value={users.password}
+                onChange={trackLogin}
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+            <button type="submit" className="btn-primary">
+              Login
+            </button>
+            <p onClick={register} className="forgot-password">Register</p>
+          </form>
+        </div>
+        <div className="login-right">
+          <div className="illustration">
+            {/* Illustration image */}
+            <img
+              src="public\digital-banking.jpg" // Replace with actual illustration URL
+              alt="Illustration"
+            />
+          </div>
+        </div>
       </div>
       {message && <Error />}
     </div>
