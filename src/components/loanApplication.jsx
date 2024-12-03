@@ -1,33 +1,25 @@
-import React, { useState, useEffect } from "react";
-import "./loanApplication.css";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getLoans } from "./store";
-import { useNavigate } from "react-router-dom";
+import { getLoans, resetMessage } from "./store";
+import { v4 as uuidv4 } from "uuid";
 import ConfirmationDialog from "./confirm";
-import { v4 } from "uuid";
+import "./loanApplication.css";
+import Error from "./error";
 
 const LoanApplicationForm = () => {
-  let [open, setopen] = useState(false);
   const dispatch = useDispatch();
-  const { ActiveUser } = useSelector((state) => state.user);
+  const { ActiveUser, message } = useSelector((state) => state.user);
+
   const [loanAmount, setLoanAmount] = useState(10000);
   const [tenure, setTenure] = useState(30);
+  const [open, setOpen] = useState(false);
 
-  function confirm() {
-    setopen(!open);
-  }
-
-  // Utility function for loan calculations
   const calculateLoanDetails = (amount, tenure) => {
     const interestRate = tenure === 30 ? 0.02 : 0.36;
     const interest = amount * interestRate;
     const totalAmountDue = amount + interest;
     return { interestRate, interest, totalAmountDue };
   };
-
-  useEffect(() => {
-    console.log(ActiveUser);
-  }, []);
 
   const { interestRate, interest, totalAmountDue } = calculateLoanDetails(
     loanAmount,
@@ -42,40 +34,25 @@ const LoanApplicationForm = () => {
     }
   };
 
-  const getLoanModel = () => {
-    if (!ActiveUser) {
-      alert("Please log in to apply for a loan!");
-      return;
-    }
-
-    if (loanAmount < 4000 || loanAmount > 100000) {
-      alert("Loan amount must be between ₦4,000 and ₦100,000");
-      return;
-    }
-
+  const handleApplyLoan = () => {
     dispatch(
       getLoans({
         loan: {
-          id: v4(),
-
-          loanAmount: loanAmount,
-          tenure: tenure,
-          interestRate: `${interestRate * 100}%`, // Corrected line
-          interest: interest,
-          totalAmountDue: totalAmountDue,
+          id: uuidv4(),
+          loanAmount,
+          tenure,
+          interestRate: `${interestRate * 100}%`,
+          interest,
+          totalAmountDue,
           status: "pending",
         },
       })
     );
+  };
 
-    let active = ActiveUser.approved?.find(
-      (approved) => approved.status === "approved"
-    );
-    if (active) {
-      return;
-    } else {
-      setopen(!open);
-    } // alert("Loan successfully applied!");
+  const closeDialog = () => {
+    dispatch(resetMessage());
+    setOpen(false);
   };
 
   return (
@@ -100,9 +77,7 @@ const LoanApplicationForm = () => {
             +
           </button>
         </div>
-        <p className="loan-range">
-          Your loan amount range is ₦4,000 to ₦100,000
-        </p>
+        <p className="loan-range">Your loan amount range is ₦4,000 to ₦100,000</p>
       </div>
 
       {/* Loan Tenure Selector */}
@@ -143,23 +118,12 @@ const LoanApplicationForm = () => {
         </p>
       </div>
 
-      {/* Repayment Schedule */}
-      <div className="repayment-schedule">
-        <h3>Repayment Schedule</h3>
-        <p>
-          <strong>Repayment Date:</strong> {new Date().toDateString()}
-        </p>
-        <p>
-          <strong>Total Repayment:</strong> ₦
-          {totalAmountDue.toFixed(2).toLocaleString()}
-        </p>
-      </div>
-
       {/* Apply Button */}
-      <button onClick={getLoanModel} className="apply-btn">
+      <button onClick={handleApplyLoan} className="apply-btn">
         Take This Loan
       </button>
-      {open && <ConfirmationDialog open={open} setopen={setopen} />}
+      {message && <Error />}
+      {open && <ConfirmationDialog />}
     </div>
   );
 };

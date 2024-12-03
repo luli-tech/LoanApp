@@ -14,11 +14,16 @@ const Homepage = () => {
   useEffect(() => {
     ActiveUser;
   }, [ActiveUser]);
+
   function apply() {
     if (ActiveUser) {
-      navigate("/terms");
+      navigate("/spin")
+      setTimeout(() => { navigate("/terms") }, 1000)
+
     } else {
-      navigate("/login");
+      navigate("/spin")
+      setTimeout(() => navigate("/login"), 10000)
+
     }
   }
 

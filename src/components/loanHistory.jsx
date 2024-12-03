@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 const LoanHistory = () => {
   let { ActiveUser } = useSelector((state) => state.user);
-  let { approved, loans } = ActiveUser || { approved: [], loans: [] }
+  let { approved = [], loans = [] } = ActiveUser || {}
   let total = [...approved, ...loans];
 
 

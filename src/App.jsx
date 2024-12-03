@@ -14,6 +14,8 @@ import TransactionSummary from "./components/transactionSummary";
 import SuccessMessage from "./components/successmessage";
 import LoanApplication from "./components/approve";
 import ConfirmationDialog from "./components/confirm";
+import Spinner from "./components/spinner";
+import Error from "./components/error";
 
 import {
   createBrowserRouter,
@@ -21,6 +23,7 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
+
 
 function App() {
   let router = createBrowserRouter(
@@ -34,6 +37,8 @@ function App() {
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/history" element={<LoanHistory />} />
         <Route path="/faq" element={<FAQ />} />
+        <Route path="/error" element={<Error />} />
+        <Route path="/spin" element={<Spinner />} />
         <Route path="/apply" element={<LoanApplicationForm />} />
         <Route path="/summary" element={<TransactionSummary />} />
         <Route path="/success" element={<SuccessMessage />} />

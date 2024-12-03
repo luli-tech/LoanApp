@@ -8,13 +8,15 @@ const TermsAndConditions = () => {
 
   const handleAccept = () => {
     setIsAccepted(true);
+    navigate("/spin")
     setTimeout(() => {
       navigate("/apply"); // Redirect after animation
     }, 1000);
   };
-
+  clearTimeout(handleAccept)
   const handleReject = () => {
     setIsAccepted(false);
+    navigate("/spin")
     setTimeout(() => {
       navigate("/");
     }, 1000);
@@ -56,9 +58,8 @@ const TermsAndConditions = () => {
         </div>
         {isAccepted !== null && (
           <div
-            className={`status-message ${
-              isAccepted ? "success" : "error"
-            } fade-in`}
+            className={`status-message ${isAccepted ? "success" : "error"
+              } fade-in`}
           >
             {isAccepted
               ? "Thank you! Redirecting to your dashboard..."

@@ -4,17 +4,25 @@ import { useSelector, useDispatch } from "react-redux";
 import { confirmLoan } from "./store";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { resetredirect } from "./store";
+import Error from "./error";
 
 const ConfirmationDialog = ({ setopen, open }) => {
     let navigate = useNavigate();
+    let { message } = useSelector(state => state.user)
+    console.log(message)
     const dispatch = useDispatch();
-    const { ActiveUser } = useSelector((state) => state.user);
+    const { ActiveUser, redirect } = useSelector((state) => state.user);
     const { id, interest, interestRate, loanAmount, tenure, totalAmountDue } =
         ActiveUser.loans[ActiveUser.loans.length - 1];
     let date = new Date().toLocaleDateString();
     useEffect(() => {
+        if (redirect) {
+            navigate(redirect)
+            dispatch(resetredirect)
+        }
         console.log(ActiveUser);
-    }, []);
+    }, [redirect]);
     function confirm() {
         dispatch(
             confirmLoan({
@@ -28,11 +36,6 @@ const ConfirmationDialog = ({ setopen, open }) => {
                 status: "approved",
             })
         );
-        if (ActiveUser.age == "" || ActiveUser.age < 18) {
-            alert("oh no");
-        } else {
-            navigate("/success");
-        }
     }
 
     return (
@@ -59,6 +62,7 @@ const ConfirmationDialog = ({ setopen, open }) => {
                     </button>
                 </div>
             </div>
+            <Error />
         </div>
     );
 };

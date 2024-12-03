@@ -13,10 +13,14 @@ const Register = () => {
     email: "",
     password: "",
   });
-  let { user } = useSelector((state) => state.user);
+  let { user, redirect } = useSelector((state) => state.user);
+
   useEffect(() => {
+    if (redirect) {
+      navigate(redirect)
+    }
     console.log(user);
-  }, []);
+  }, [redirect]);
   function getSetname(e) {
     setgetUser({
       ...getuser,
@@ -34,7 +38,6 @@ const Register = () => {
     getuser.name = "";
     getuser.email = "";
     getuser.password = "";
-    navigate("/login");
   }
   return (
     <div className="register-form">

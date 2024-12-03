@@ -3,18 +3,31 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { login } from "./store";
 import "./login.css";
+import { resetredirect } from "./store";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import Error from "./error";
 
 const Login = () => {
   let dispatch = useDispatch();
   let navigate = useNavigate();
-  let { user, ActiveUser } = useSelector((state) => state.user);
+  let { user, ActiveUser, redirect, message } = useSelector((state) => state.user);
   let [users, setUser] = useState({
     email: "",
     password: "",
-  });
-  useEffect(() => console.log(user), []);
+  })
+
+  useEffect(() => {
+    if (redirect) {
+      const timer = setTimeout(() => {
+        navigate(redirect);
+        dispatch(resetredirect());
+      }, 2000);
+
+      return () => clearTimeout(timer); // Cleanup the timer to prevent memory leaks
+    }
+  }, [redirect, navigate, dispatch]);
+
   function trackLogin(e) {
     setUser({ ...users, [e.target.name]: e.target.value });
   }
@@ -25,9 +38,6 @@ const Login = () => {
     e.preventDefault();
     dispatch(login(users));
     console.log(user);
-    setTimeout(() => {
-      navigate("/");
-    }, 1000);
   }
   return (
     <div className="login-form">
@@ -61,6 +71,7 @@ const Login = () => {
       <div>
         <NavLink to="/register">Don't have an account? Register</NavLink>
       </div>
+      {message && <Error />}
     </div>
   );
 };

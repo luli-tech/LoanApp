@@ -58,16 +58,16 @@ const Navbar = () => {
           </div>
 
           <ul className="sidebar-menu">
-            <NavLink to="/" className="sidebar-item">
+            <NavLink onClick={toggleSidebar} to="/" className="sidebar-item">
               Home
             </NavLink>
-            <NavLink to="/profile" className="sidebar-item">
+            <NavLink onClick={toggleSidebar} to="/profile" className="sidebar-item">
               Profile
             </NavLink>
-            <NavLink to="/status" className="sidebar-item">
+            <NavLink onClick={toggleSidebar} to="/status" className="sidebar-item">
               Loan Status
             </NavLink>
-            <NavLink to="/history" className="sidebar-item">
+            <NavLink onClick={toggleSidebar} to="/history" className="sidebar-item">
               Loan History
             </NavLink>
 
