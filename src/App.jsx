@@ -11,6 +11,7 @@ import LoanHistory from "./components/loanHistory";
 import Login from "./components/Login";
 import Register from "./components/register";
 import UserProfile from "./components/userProfile";
+
 import TransactionSummary from "./components/transactionSummary";
 import SuccessMessage from "./components/successmessage";
 import LoanApplication from "./components/approve";
@@ -54,10 +55,11 @@ function App() {
         <Route path="/error" element={<Error />} />
         <Route path="/spin" element={<Spinner />} />
         <Route path="/apply" element={<LoanApplicationForm />} />
-        <Route path="/summary" element={<TransactionSummary />} />
+        <Route path="/loan-details/:id" element={<TransactionSummary />} />
         <Route path="/success" element={<SuccessMessage />} />
         <Route path="/ask" element={<LoanApplication />} />
         <Route path="/type" element={<Typewriter />} />
+
         <Route path="/confirm" element={<ConfirmationDialog />} />
       </Route>
     )

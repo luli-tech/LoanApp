@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./TermsLoan.css";
+import Spinner from "./spinner";
 
 const TermsAndConditions = () => {
   const [isAccepted, setIsAccepted] = useState(null);
@@ -8,7 +9,6 @@ const TermsAndConditions = () => {
 
   const handleAccept = () => {
     setIsAccepted(true);
-    navigate("/spin");
     setTimeout(() => {
       navigate("/apply"); // Redirect after the spin animation
     }, 1000);
@@ -16,7 +16,6 @@ const TermsAndConditions = () => {
 
   const handleReject = () => {
     setIsAccepted(false);
-    navigate("/spin");
     setTimeout(() => {
       navigate("/"); // Redirect after the spin animation
     }, 1000);
@@ -63,6 +62,7 @@ const TermsAndConditions = () => {
           )}
         </div>
       </div>
+      {isAccepted && <Spinner />}
     </div>
   );
 };

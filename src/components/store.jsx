@@ -58,6 +58,7 @@ const userSlice = createSlice({
           id: state.user.length + 1,
           isAuthenticated: false,
         });
+        state.message = 'account successfully created'
         safeSetItem("users", state.user);
       }
     },
@@ -78,12 +79,12 @@ const userSlice = createSlice({
 
         } else {
           state.message = "Incorrect password"
-          state.redirect = '/login'
+          // state.redirect = '/login'
           return
         }
       } else {
         state.message = "User not found"
-        state.redirect = '/register'
+        // state.redirect = '/login'
       }
     },
     logout: (state) => {
@@ -123,9 +124,11 @@ const userSlice = createSlice({
         state.message = "Loan amount must be between ₦4,000 and ₦100,000";
         return;
       }
-
+      if (loanAmount < 1) {
+        state.message = 'invalid loan input'
+      }
       if (!state.ActiveUser.age || state.ActiveUser.age < 18) {
-        state.message = "You must be at least 18 years old to apply for a loan.";
+        state.message = "You must be at least 18 years old to apply for a loan. Please update your age";
         return;
       }
 
@@ -134,7 +137,7 @@ const userSlice = createSlice({
       );
       if (activeLoan) {
         state.message = "You already have an active loan.";
-        return;
+
       }
 
       const updatedUser = {
@@ -176,6 +179,7 @@ const userSlice = createSlice({
       );
       if (activeLoan) {
         state.message = "you have an active loan"
+        // state.ActiveUser.loans = state.ActiveUser.loans.push(action.payload)
 
       } if (age) {
         const updatedUser = {

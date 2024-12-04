@@ -7,6 +7,9 @@ import Error from "./error";
 
 const Register = () => {
   const navigate = useNavigate();
+  function log() {
+    navigate('/login')
+  }
   const dispatch = useDispatch();
   const [userDetails, setUserDetails] = useState({
     name: "",
@@ -15,11 +18,11 @@ const Register = () => {
   });
   const { user, redirect, message } = useSelector((state) => state.user);
 
-  useEffect(() => {
-    if (redirect) {
-      navigate(redirect);
-    }
-  }, [redirect, navigate]);
+  // useEffect(() => {
+  //   if (redirect) {
+  //     navigate(redirect);
+  //   }
+  // }, [redirect, navigate]);
 
   const handleChange = (e) => {
     setUserDetails({
@@ -81,9 +84,9 @@ const Register = () => {
                 Register
               </button>
             </form>
-            <NavLink to="/login" className="login-link">
+            <button onClick={log} className="login-link">
               Already have an account? Login
-            </NavLink>
+            </button>
           </div>
         </div>
         <div className="register-right">

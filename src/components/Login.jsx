@@ -5,6 +5,8 @@ import "./login.css";
 import Error from "./error";
 import { useNavigate } from "react-router-dom";
 
+import { NavLink } from "react-router-dom";
+
 
 const Login = () => {
   let navigate = useNavigate()
@@ -67,7 +69,7 @@ const Login = () => {
             <button type="submit" className="btn-primary">
               Login
             </button>
-            <p onClick={register} className="forgot-password">Register</p>
+            <NavLink to='/register' className="forgot-password">Register</NavLink>
           </form>
         </div>
         <div className="login-right">

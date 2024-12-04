@@ -1,6 +1,7 @@
 import React from "react";
 import "./loanHistory.css";
 import { useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
 
 const LoanHistory = () => {
   // Extracting ActiveUser from Redux state
@@ -31,30 +32,38 @@ const LoanHistory = () => {
     <div className="loan-history">
       <h2>Loan History</h2>
       {history.length > 0 ? (
-        <table className="loan-history-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Loan Amount</th>
-              <th>Status</th>
-              <th>Loan ID</th>
-              <th>Interest</th>
-              <th>Total Amount Due</th>
-            </tr>
-          </thead>
-          <tbody>
-            {history.map((loan) => (
-              <tr key={loan.id}>
-                <td>{loan.date || "N/A"}</td>
-                <td>${loan.loanAmount?.toFixed(2) || "0.00"}</td>
-                <td>{loan.status || "Unknown"}</td>
-                <td>{loan.id || "N/A"}</td>
-                <td>${loan.interest?.toFixed(2) || "0.00"}</td>
-                <td>${loan.loanAmountDue?.toFixed(2) || "0.00"}</td>
+        <div className="loan-history-table-container">
+          <table className="loan-history-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Loan Amount</th>
+                <th>Status</th>
+                <th>Loan ID</th>
+                <th>Interest</th>
+                <th>Total Amount Due</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {history.map((loan) => (
+                <NavLink
+                  to={`/loan-details/${loan.id}`}
+                  key={loan.id}
+                  className="loan-row-link"
+                >
+                  <tr className={loan.status === "approved" ? "approved-loan" : ""}>
+                    <td>{loan.date || "N/A"}</td>
+                    <td>${loan.loanAmount?.toFixed(2) || "0.00"}</td>
+                    <td>{loan.status || "Unknown"}</td>
+                    <td>{loan.id || "N/A"}</td>
+                    <td>${loan.interest?.toFixed(2) || "0.00"}</td>
+                    <td>${loan.loanAmountDue?.toFixed(2) || "0.00"}</td>
+                  </tr>
+                </NavLink>
+              ))}
+            </tbody>
+          </table>
+        </div>
       ) : (
         <p>No loan history available.</p>
       )}

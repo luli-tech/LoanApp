@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "./store";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -10,23 +10,41 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { ActiveUser } = useSelector((state) => state.user);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  // Calculate user balance
+  const balance = ActiveUser?.approved?.reduce(
+    (total, loan) => total + (loan.loanAmount || 0),
+    0
+  ) || 0;
+
+  // Sidebar state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 704);
+
+  // Responsive sidebar handling
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSidebarOpen(window.innerWidth > 704);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Toggle Sidebar
-  const toggleSidebar = () => {
-    setIsSidebarOpen((prevState) => !prevState);
-  };
+  const toggleSidebar = () => setIsSidebarOpen((prevState) => !prevState);
 
   // Logout Handler
   const handleLogout = () => {
     dispatch(logout());
     navigate("/");
   };
+  function login() {
+    navigate("/login");
+  }
 
   return (
     <div className="navbar-layout">
       {/* Sidebar */}
-      <div className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
+      <div className={`sidebar ${isSidebarOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <img
             className="user-pic"
@@ -34,32 +52,34 @@ const Navbar = () => {
             alt="User"
           />
           <h3 className="user-name">{ActiveUser?.name || "Guest"}</h3>
-          <p className="user-status">
-            {ActiveUser ? "Active" : "Not Logged In"}
-          </p>
+          <p className="user-status">{ActiveUser ? "Active" : "Not Logged In"}</p>
+          <h3>Balance: ${balance.toFixed(2)}</h3>
         </div>
         <ul className="sidebar-menu">
-          <NavLink onClick={toggleSidebar} to="/" className="sidebar-item">
+          <NavLink to="/" className="sidebar-item">
             Home
           </NavLink>
-          {ActiveUser && (<div>
-            <NavLink onClick={toggleSidebar} to="/profile" className="sidebar-item">
-              Profile
-            </NavLink>
-            <NavLink onClick={toggleSidebar} to="/status" className="sidebar-item">
-              Loan Status
-            </NavLink>
-            <NavLink onClick={toggleSidebar} to="/history" className="sidebar-item">
-              Loan History
-            </NavLink></div>)}
+          {ActiveUser && (
+            <>
+              <NavLink o to="/profile" className="sidebar-item">
+                Profile
+              </NavLink>
+              <NavLink o to="/status" className="sidebar-item">
+                Loan Status
+              </NavLink>
+              <NavLink o to="/history" className="sidebar-item">
+                Loan History
+              </NavLink>
+            </>
+          )}
           {ActiveUser ? (
-            <NavLink onClick={handleLogout} to="/" className="sidebar-item">
+            <button onClick={handleLogout} className="sidebar-item">
               Logout
-            </NavLink>
+            </button>
           ) : (
-            <NavLink to="/login" className="sidebar-item">
+            <p onClick={login} className="sidebar-item">
               Login
-            </NavLink>
+            </p>
           )}
         </ul>
       </div>

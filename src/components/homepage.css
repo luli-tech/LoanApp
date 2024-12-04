@@ -6,7 +6,7 @@ body {
 }
 
 .homepage {
-  overflow-x: hidden;
+  overflow: hidden;
   scroll-behavior: smooth;
 }
 

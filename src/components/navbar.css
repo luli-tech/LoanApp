@@ -73,7 +73,6 @@
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1;
 }
 
 /* Outlet styles */
@@ -113,12 +112,14 @@
   color: #ecf0f1;
   font-size: 24px;
   cursor: pointer;
+  display: none;
 }
 
 .navbar-title {
   font-size: 20px;
   color: #ecf0f1;
   text-decoration: none;
+  transition: margin-left 0.3s ease-in-out;
 }
 
 /* Responsive Design */
@@ -137,5 +138,8 @@
     overflow-y: auto;
     margin-top: 0;
     transition: margin-left 0.3s ease-in-out;
+  }
+  .menu-btn {
+    display: block;
   }
 }

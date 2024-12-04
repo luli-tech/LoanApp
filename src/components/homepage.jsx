@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./homepage.css";
 import { useSelector } from "react-redux";
 import { Typed } from "react-typed";
+import { redirect } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Typewriter from "./typewriter";
 
@@ -12,17 +13,18 @@ const Homepage = () => {
   const { ActiveUser } = useSelector(
     (state) => state.user || { ActiveUser: null }
   );
+
   useEffect(() => {
     ActiveUser;
   }, [ActiveUser]);
 
   function apply() {
     if (ActiveUser) {
-      navigate("/spin")
+
       setTimeout(() => { navigate("/terms") }, 1000)
 
     } else {
-      navigate("/spin")
+
       setTimeout(() => navigate("/login"), 10000)
 
     }
