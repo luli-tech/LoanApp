@@ -1,6 +1,86 @@
-.card {
+.body {
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  background: linear-gradient(120deg, #f6d365, #fda085);
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  height: 100vh;
+}
+
+.card {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  padding: 30px;
+  width: 400px;
+  text-align: center;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.description {
+  font-size: 1rem;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.input-container {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.input-container label {
+  display: block;
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+.input-container input {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  transition: 0.3s;
+}
+
+.input-container input:focus {
+  border-color: #fda085;
+  outline: none;
+  box-shadow: 0 0 8px rgba(253, 160, 133, 0.5);
+}
+
+.stripe-button {
+  background: linear-gradient(120deg, #f6d365, #fda085);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.stripe-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(253, 160, 133, 0.4);
+}
+
+.stripe-button:active {
+  transform: scale(1);
+  box-shadow: none;
 }
