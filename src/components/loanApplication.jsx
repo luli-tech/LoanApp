@@ -11,10 +11,10 @@ const LoanApplicationForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { ActiveUser, message, redirect } = useSelector((state) => state.user);
-
   const [loanAmount, setLoanAmount] = useState("");
   const [tenure, setTenure] = useState(30);
   const [open, setOpen] = useState(false);
+  let date = new Date().toLocaleString()
 
   // Calculate loan details based on the selected tenure and loan amount
   const calculateLoanDetails = (amount) => {
@@ -28,7 +28,7 @@ const LoanApplicationForm = () => {
   const { interestRate, interest, totalAmountDue } = calculateLoanDetails(
     parseFloat(loanAmount) || 0
   );
-
+  let suc = ActiveUser?.loans?.find(user => user.status === 'approved')
   // Redirect handling
   useEffect(() => {
     if (redirect) {
@@ -40,14 +40,11 @@ const LoanApplicationForm = () => {
   const handleApplyLoan = () => {
     const amount = parseFloat(loanAmount) || 0;
 
-    if (amount < 4000 || amount > 100000) {
-      alert("Please enter a valid loan amount between ₦4,000 and ₦100,000.");
-      return;
-    }
 
     dispatch(
       getLoans({
         loan: {
+          date: date,
           id: uuidv4(),
           loanAmount: amount,
           tenure,
@@ -140,9 +137,9 @@ const LoanApplicationForm = () => {
           Take This Loan
         </button>
         {message && <Error />}
-        {!ActiveUser?.approved && (
-          <ConfirmationDialog setopen={setOpen} open={open} />
-        )}
+
+        {/* <ConfirmationDialog setopen={setOpen} open={open} /> */}
+
       </div>
     </div>
   );

@@ -21,11 +21,11 @@ const Homepage = () => {
   function apply() {
     if (ActiveUser) {
 
-      setTimeout(() => { navigate("/terms") }, 1000)
+      navigate("/terms")
 
     } else {
 
-      setTimeout(() => navigate("/login"), 10000)
+      navigate("/login")
 
     }
   }

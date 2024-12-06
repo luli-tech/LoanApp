@@ -1,0 +1,65 @@
+/* loanRepayment.css */
+
+.bod {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f4f4f9;
+}
+
+.loan-repayment {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  min-width: 300px;
+}
+
+.loan-repayment h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.loan-repayment select,
+.loan-repayment input,
+.loan-repayment button {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.loan-repayment select {
+  background-color: #f9f9f9;
+}
+
+.loan-repayment input {
+  background-color: #f9f9f9;
+}
+
+.loan-repayment button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.loan-repayment button:hover {
+  background-color: #45a049;
+}
+
+.loan-repayment p {
+  text-align: center;
+  color: #ff4d4d;
+  font-weight: bold;
+  margin-top: 15px;
+}

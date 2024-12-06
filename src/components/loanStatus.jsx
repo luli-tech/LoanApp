@@ -10,8 +10,8 @@ const LoanStatus = () => {
   return (
     <div className="loan-status">
       <h2>Your Loan Status</h2>
-      {ActiveUser.approved && <div>You have an active loan</div>}
-      {!ActiveUser.approved && <div>You currently don't have any active Loan</div>}
+      {ActiveUser.loans && <div>You have an active loan</div>}
+      {!ActiveUser.loans && <div>You currently don't have any active Loan</div>}
     </div>
   );
 };

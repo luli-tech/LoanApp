@@ -1,68 +1,60 @@
 import React from "react";
-import "./loanHistory.css";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import "./loanHistory.css"; // Ensure the correct CSS path
 
 const LoanHistory = () => {
   // Extracting ActiveUser from Redux state
   const { ActiveUser } = useSelector((state) => state.user);
 
   // Defaulting approved and loans to empty arrays to avoid undefined errors
-  const { approved = [], loans = [] } = ActiveUser || {};
+  const { loans = [], repayments = [] } = ActiveUser || {};
 
-  // Combine approved and pending loans into one list
-  const combinedLoans = [...approved, ...loans];
-
-  // Consolidate loan history, avoiding duplicates and prioritizing approved loans
-  const history = combinedLoans.reduce((acc, currentLoan) => {
-    const existingLoanIndex = acc.findIndex((loan) => loan.id === currentLoan.id);
-
-    if (existingLoanIndex === -1) {
-      // Add loan if it doesn't exist in the accumulated list
-      acc.push(currentLoan);
-    } else if (currentLoan.status === "approved") {
-      // Replace existing loan with the approved one if duplicates exist
-      acc[existingLoanIndex] = currentLoan;
-    }
-
-    return acc;
-  }, []);
+  // Filter for only approved loans
+  const approvedLoans = loans.filter((loan) => loan.status === "approved");
 
   return (
     <div className="loan-history">
       <h2>Loan History</h2>
-      {history.length > 0 ? (
-        <div className="loan-history-table-container">
-          <table className="loan-history-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Loan Amount</th>
-                <th>Status</th>
-                <th>Loan ID</th>
-                <th>Interest</th>
-                <th>Total Amount Due</th>
-              </tr>
-            </thead>
-            <tbody>
-              {history.map((loan) => (
-                <NavLink
-                  to={`/loan-details/${loan.id}`}
-                  key={loan.id}
-                  className="loan-row-link"
+      {loans.length > 0 ? (
+        <div className="loan-history-table">
+          {/* Table header */}
+          <div className="loan-history-row header">
+            <div className="loan-history-cell">Date</div>
+            <div className="loan-history-cell">Loan Amount</div>
+            <div className="loan-history-cell">Status</div>
+            <div className="loan-history-cell">Loan ID</div>
+            <div className="loan-history-cell">Interest</div>
+            <div className="loan-history-cell">Total Amount Due</div>
+          </div>
+
+          {/* Table rows */}
+          {loans.map((loan) => (
+            loan.id && (
+              <NavLink
+                to={`/loan-details/${loan.id}`}
+                key={loan.id}
+                className="loan-history-row-link"
+              >
+                <div
+                  className={`loan-history-row ${loan.status === "approved" ? "approved-loan" : ""}`}
                 >
-                  <tr className={loan.status === "approved" ? "approved-loan" : ""}>
-                    <td>{loan.date || "N/A"}</td>
-                    <td>${loan.loanAmount?.toFixed(2) || "0.00"}</td>
-                    <td>{loan.status || "Unknown"}</td>
-                    <td>{loan.id || "N/A"}</td>
-                    <td>${loan.interest?.toFixed(2) || "0.00"}</td>
-                    <td>${loan.loanAmountDue?.toFixed(2) || "0.00"}</td>
-                  </tr>
-                </NavLink>
-              ))}
-            </tbody>
-          </table>
+                  <div className="loan-history-cell">{loan.date || "Pending"}</div>
+                  <div className="loan-history-cell">
+                    ₦{loan.loanAmount?.toFixed(2) || "0.00"}
+                  </div>
+                  <div className="loan-history-cell">{loan.status || "Unknown"}</div>
+                  <div className="loan-history-cell">{loan.id || "Pending"}</div>
+                  <div className="loan-history-cell">
+                    ₦{loan.interest?.toFixed(2) || "0.00"}
+                  </div>
+                  <div className="loan-history-cell">
+                    ₦{loan.totalAmountDue?.toFixed(2) || "0.00"}
+                  </div>
+                </div>
+              </NavLink>
+            )
+          ))}
         </div>
       ) : (
         <p>No loan history available.</p>

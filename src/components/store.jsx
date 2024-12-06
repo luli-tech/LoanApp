@@ -1,4 +1,5 @@
 import { createSlice, configureStore } from "@reduxjs/toolkit";
+import { redirect } from "react-router-dom";
 
 // Initial State
 const initialState = {
@@ -18,7 +19,7 @@ const initialState = {
   ],
   ActiveUser: JSON.parse(localStorage.getItem("activeUser")) || null,
   redirect: null,
-  message: null
+  message: null,
 };
 
 // Utility function to safely set items in localStorage
@@ -35,33 +36,55 @@ const safeSetItem = (key, value) => {
   }
 };
 
+// Utility function to validate loan eligibility
+const validateLoanEligibility = (user, loanAmount) => {
+  if (loanAmount < 4000 || loanAmount > 100000) {
+    return "Loan amount must be between ₦4,000 and ₦100,000";
+  }
+  if (!user.age || user.age < 18) {
+    return "You must be at least 18 years old to apply for a loan.";
+  }
+  if (user.loans?.find((loan) => loan.status === "approved")) {
+    return "You have an unpaid loan.";
+  }
+  return null;
+};
+
 // User Slice
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    // Action: Register New User
     newUser: (state, action) => {
       const existingUser = state.user.find(
         (user) => user.email === action.payload.email
       );
       if (existingUser) {
-        state.message = "User already exists"
-        state.redirect = '/login'
+        state.message = "User already exists";
+        state.redirect = "/login";
       } else if (
         action.payload.name.length < 1 ||
         action.payload.password.length < 1
       ) {
-        state.message = "Name and password cannot be empty"
+        state.message = "Name and password cannot be empty";
       } else {
-        state.user.push({
+        const newUser = {
           ...action.payload,
           id: state.user.length + 1,
           isAuthenticated: false,
-        });
-        state.message = 'account successfully created'
+          loanBalance: 0,
+          accountBalance: 0
+
+        };
+        state.user.push(newUser);
+        state.redirect = "/login";
+        state.message = "Account successfully created";
         safeSetItem("users", state.user);
       }
     },
+
+    // Action: Login User
     login: (state, action) => {
       const user = state.user.find(
         (user) => user.email === action.payload.email
@@ -69,24 +92,22 @@ const userSlice = createSlice({
       if (user) {
         if (user.password === action.payload.password) {
           const updatedUser = { ...user, isAuthenticated: true };
-          state.user = state.user.map((u) =>
-            u.id === user.id ? updatedUser : u
+          state.user = state.user.map((user) =>
+            user.id === updatedUser.id ? updatedUser : user
           );
           state.ActiveUser = updatedUser;
-          state.redirect = '/'
+          state.redirect = "/";
           safeSetItem("activeUser", state.ActiveUser);
           safeSetItem("users", state.user);
-
         } else {
-          state.message = "Incorrect password"
-          // state.redirect = '/login'
-          return
+          state.message = "Incorrect password";
         }
       } else {
-        state.message = "User not found"
-        // state.redirect = '/login'
+        state.message = "User not found";
       }
     },
+
+    // Action: Logout User
     logout: (state) => {
       if (state.ActiveUser) {
         state.user = state.user.map((user) =>
@@ -99,45 +120,34 @@ const userSlice = createSlice({
         localStorage.removeItem("activeUser");
       }
     },
+
+    // Action: Update Profile
     setProfile: (state, action) => {
       if (state.ActiveUser && state.ActiveUser.isAuthenticated) {
         const updatedUser = { ...state.ActiveUser, ...action.payload };
         state.ActiveUser = updatedUser;
-
         state.user = state.user.map((user) =>
           user.id === updatedUser.id ? updatedUser : user
         );
-
         safeSetItem("activeUser", updatedUser);
         safeSetItem("users", state.user);
       }
     },
+
+    // Action: Apply for Loan
     getLoans: (state, action) => {
       if (!state.ActiveUser) {
         state.message = "Please log in to apply for a loan!";
         return;
       }
 
-      const { loanAmount, tenure } = action.payload.loan;
-
-      if (loanAmount < 4000 || loanAmount > 100000) {
-        state.message = "Loan amount must be between ₦4,000 and ₦100,000";
-        return;
-      }
-      if (loanAmount < 1) {
-        state.message = 'invalid loan input'
-      }
-      if (!state.ActiveUser.age || state.ActiveUser.age < 18) {
-        state.message = "You must be at least 18 years old to apply for a loan. Please update your age";
-        return;
-      }
-
-      const activeLoan = state.ActiveUser.approved?.find(
-        (loan) => loan.status === "approved"
+      let errorMessage = validateLoanEligibility(
+        state.ActiveUser,
+        action.payload.loan.loanAmount
       );
-      if (activeLoan) {
-        state.message = "You already have an active loan.";
-
+      if (errorMessage) {
+        state.message = errorMessage;
+        return;
       }
 
       const updatedUser = {
@@ -149,55 +159,134 @@ const userSlice = createSlice({
       state.user = state.user.map((user) =>
         user.id === updatedUser.id ? updatedUser : user
       );
+      state.redirect = '/confirm'
+      safeSetItem("activeUser", updatedUser);
+      safeSetItem("users", state.user);
+      state.message = "Loan application successful!";
+    },
 
-      // state.message = "Loan successfully applied!";
+    // Action: Confirm Loan
+    confirmLoan: (state, action) => {
+      if (!state.ActiveUser) return;
+
+      const { loans = [] } = state.ActiveUser;
+
+      // Update the loan's status to 'approved'
+      const updatedLoans = loans.map((loan) =>
+        loan.id === action.payload.id ? { ...loan, status: "approved" } : loan
+      );
+
+      // Calculate the balance based on loans with 'approved' status
+      const balance = updatedLoans
+        .filter((loan) => loan.status === "approved")
+        .reduce((total, loan) => total + loan.loanAmount, 0);
+
+      const updatedUser = {
+        ...state.ActiveUser,
+        loans: updatedLoans,
+        balance, // Set the new balance
+      };
+
+      // Update the state and localStorage
+      state.ActiveUser = updatedUser;
+      state.user = state.user.map((user) =>
+        user.id === updatedUser.id ? updatedUser : user
+      );
+      state.redirect = "/success";
+      safeSetItem("activeUser", updatedUser);
+      safeSetItem("users", state.user);
+    },
+    repayment: (state, action) => {
+      if (!state.ActiveUser) {
+        state.message = "Please log in to repay a loan.";
+        return;
+      }
+
+      const { loanId, amount } = action.payload;
+      let totalAmountDueExceeded = false;
+
+      // Update loans to apply the repayment
+      const updatedLoans = state.ActiveUser.loans?.map((loan) => {
+        if (loan.id === loanId && loan.status === "approved") {
+          const newTotal = loan.totalAmountDue - amount;
+
+          if (newTotal < 0) {
+            totalAmountDueExceeded = true; // Prevent overpayment
+          }
+
+          return {
+            ...loan,
+            totalAmountDue: newTotal > 0 ? newTotal : 0,
+            status: newTotal > 0 ? "approved" : "paid", // Update status if fully repaid
+          };
+        }
+        return loan;
+      });
+
+      // Prevent repayment if it exceeds total amount due
+      if (totalAmountDueExceeded) {
+        state.message = "Repayment amount exceeds the total amount due.";
+        return;
+      }
+
+      // Check if user balance is sufficient for repayment
+      if (state.ActiveUser.balance < amount) {
+        state.message = "Insufficient balance, please fund your account.";
+        return;
+      }
+
+      // Deduct repayment amount from user's balance
+      const updatedBalance = state.ActiveUser.balance - amount;
+
+      // Update ActiveUser object
+      const updatedUser = {
+        ...state.ActiveUser,
+        loans: updatedLoans,
+        balance: updatedBalance, // Deducted balance after repayment
+        repayments: [
+          ...(state.ActiveUser.repayments || []),
+          { loanId, amount, date: new Date().toISOString() }, // Record repayment
+        ],
+      };
+
+      // Update state and persist changes to localStorage
+      state.ActiveUser = updatedUser;
+      state.user = state.user.map((user) =>
+        user.id === updatedUser.id ? updatedUser : user
+      );
+
+      state.message = "Repayment successful!";
+      safeSetItem("activeUser", updatedUser);
+      safeSetItem("users", state.user);
+    },
+    accountFunding: (state, action) => {
+      if (!state.ActiveUser) {
+        state.message = "Please log in to fund your account.";
+        return;
+      }
+
+      const amount = action.payload;
+
+      // Update balance
+      const updatedUser = {
+        ...state.ActiveUser,
+        accountBalance: (state.ActiveUser.accountBalance || 0) + amount,
+      };
+
+      // Update state and localStorage
+      state.ActiveUser = updatedUser;
+      state.user = state.user.map((user) =>
+        user.id === updatedUser.id ? updatedUser : user
+      );
+
+      state.message = "Account funded successfully!";
       safeSetItem("activeUser", updatedUser);
       safeSetItem("users", state.user);
     },
 
-    confirmLoan: (state, action) => {
-      if (!state.ActiveUser) return;
-
-      const { age, loans = [], approved = [] } = state.ActiveUser;
-
-      if (!age) {
-        state.message = "Please, update your age"
-
-      }
-
-      if (age < 18) {
-        state.message = "You're too young to borrow; you're not eligible"
-
-      }
-
-      if (approved.includes(action.payload)) {
-        state.message = "This loan is already approved"
-
-      }
-      let activeLoan = state.ActiveUser?.approved?.find(
-        (active) => active.status === "approved"
-      );
-      if (activeLoan) {
-        state.message = "you have an active loan"
-        // state.ActiveUser.loans = state.ActiveUser.loans.push(action.payload)
-
-      } if (age) {
-        const updatedUser = {
-          ...state.ActiveUser,
-          approved: [...approved, action.payload],
-        };
-
-        state.ActiveUser = updatedUser;
-        state.user = state.user.map((user) =>
-          user.id === updatedUser.id ? updatedUser : user
-        );
-        state.redirect = '/success'
-        safeSetItem("activeUser", updatedUser);
-        safeSetItem("users", state.user);
-      }
-    },
+    // Reset Temporary Redirect and Message
     resetredirect: (state) => {
-      state.redirect = null
+      state.redirect = null;
     },
     resetMessage: (state) => {
       state.message = null;
@@ -206,8 +295,18 @@ const userSlice = createSlice({
 });
 
 // Export actions
-export const { resetMessage, newUser, login, logout, setProfile, getLoans, confirmLoan, resetredirect } =
-  userSlice.actions;
+export const {
+  resetMessage,
+  newUser,
+  login,
+  logout,
+  setProfile,
+  getLoans,
+  confirmLoan,
+  repayment,
+  resetredirect,
+  accountFunding
+} = userSlice.actions;
 
 // Configure the Redux store
 const store = configureStore({

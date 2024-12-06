@@ -11,7 +11,6 @@ import LoanHistory from "./components/loanHistory";
 import Login from "./components/Login";
 import Register from "./components/register";
 import UserProfile from "./components/userProfile";
-
 import TransactionSummary from "./components/transactionSummary";
 import SuccessMessage from "./components/successmessage";
 import LoanApplication from "./components/approve";
@@ -19,6 +18,8 @@ import ConfirmationDialog from "./components/confirm";
 import Spinner from "./components/spinner";
 import Typewriter from "./components/typewriter";
 import Error from "./components/error";
+import CardPAyment from "./components/cardPAyment";
+import LoanRepayment from "./components/LoanRepayment";
 import { useEffect, useMemo } from "react";
 import {
   createBrowserRouter,
@@ -53,19 +54,25 @@ function App() {
         <Route path="/history" element={<LoanHistory />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/error" element={<Error />} />
+        <Route path="/repay" element={<LoanRepayment />} />
         <Route path="/spin" element={<Spinner />} />
         <Route path="/apply" element={<LoanApplicationForm />} />
         <Route path="/loan-details/:id" element={<TransactionSummary />} />
         <Route path="/success" element={<SuccessMessage />} />
         <Route path="/ask" element={<LoanApplication />} />
         <Route path="/type" element={<Typewriter />} />
+        <Route path="/card" element={<CardPAyment />} />
 
         <Route path="/confirm" element={<ConfirmationDialog />} />
       </Route>
     )
-  );
+  )
 
-  return <RouterProvider router={router} />;
+
+  return (
+    <div><RouterProvider router={router} />
+
+    </div>)
 }
 
 export default App;

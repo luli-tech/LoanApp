@@ -6,15 +6,15 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Error from "./error";
 
-const ConfirmationDialog = ({ setopen, open }) => {
+const ConfirmationDialog = () => {
     let navigate = useNavigate();
     const dispatch = useDispatch();
-    const { message, ActiveUser, redirect } = useSelector((state) => state.user);
+    const { ActiveUser, redirect } = useSelector((state) => state.user);
 
     const loanDetails = ActiveUser?.loans?.length
         ? ActiveUser.loans[ActiveUser.loans.length - 1]
         : null;
-
+    // let mena = ActiveUser.loans.find(user => user)
     const {
         id = null,
         interest = 0,
@@ -26,7 +26,7 @@ const ConfirmationDialog = ({ setopen, open }) => {
 
     let date = new Date().toLocaleDateString();
 
-    // Handle redirect after loan confirmation
+
     useEffect(() => {
         if (redirect) {
             navigate(redirect);
@@ -60,7 +60,7 @@ const ConfirmationDialog = ({ setopen, open }) => {
         });
 
         // Close the dialog
-        setopen(false);
+
     }
 
     if (!loanDetails) {
@@ -86,7 +86,7 @@ const ConfirmationDialog = ({ setopen, open }) => {
                     <button className="confirm-btn" onClick={confirm}>
                         Yes, Borrow Now
                     </button>
-                    <button className="cancel-btn" onClick={() => setopen(!open)}>
+                    <button className="cancel-btn" >
                         Cancel
                     </button>
                 </div>

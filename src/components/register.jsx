@@ -18,11 +18,11 @@ const Register = () => {
   });
   const { user, redirect, message } = useSelector((state) => state.user);
 
-  // useEffect(() => {
-  //   if (redirect) {
-  //     navigate(redirect);
-  //   }
-  // }, [redirect, navigate]);
+  useEffect(() => {
+    if (redirect) {
+      navigate(redirect);
+    }
+  }, [redirect, navigate]);
 
   const handleChange = (e) => {
     setUserDetails({

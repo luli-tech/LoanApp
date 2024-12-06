@@ -9,16 +9,12 @@ const TermsAndConditions = () => {
 
   const handleAccept = () => {
     setIsAccepted(true);
-    setTimeout(() => {
-      navigate("/apply"); // Redirect after the spin animation
-    }, 1000);
+    navigate("/apply"); // Redirect after the spin animation
   };
 
   const handleReject = () => {
     setIsAccepted(false);
-    setTimeout(() => {
-      navigate("/"); // Redirect after the spin animation
-    }, 1000);
+    navigate("/"); // Redirect after the spin animation
   };
 
   return (

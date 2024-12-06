@@ -8,30 +8,28 @@ const TransactionSummary = () => {
   let { approved = [], loans = [] } = ActiveUser || {}
   const combinedLoans = [...approved, ...loans];
   console.log(combinedLoans)
-
-
-  let current = combinedLoans.find(loan => loan.id === id)
+  let current = combinedLoans?.find(loan => loan.id === id)
   console.log(current)
   return (
     <div className="transaction-summary">
       <h2>Transaction Summary</h2>
       <p>
-        <strong>Loan Amount:</strong>{current.loanAmount}
+        <strong>Loan Amount:</strong>{current?.loanAmount}
       </p>
       <p>
-        <strong>Interest:</strong> {current.interestRate}
+        <strong>Interest:</strong> {current?.interestRate}
       </p>
       <p>
-        <strong>Interest Rate:</strong> {current.interest}
+        <strong>Interest Rate:</strong> {current?.interest}
       </p>
       <p>
-        <strong>Total Repayment:</strong> {current.totalAmountDue}
+        <strong>Total Repayment:</strong> {current?.totalAmountDue}
       </p>
       <p>
-        <strong>Status:</strong> {current.status}
+        <strong>Status:</strong> {current?.status}
       </p>
       <p>
-        <strong>Date:</strong> {current.interestRate}
+        <strong>Date:</strong> {current?.date}
       </p>
       <button className="cta-primary">View Details</button>
     </div>
