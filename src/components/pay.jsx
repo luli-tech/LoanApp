@@ -3,18 +3,15 @@ import StripeCheckout from "react-stripe-checkout";
 import "./card.css"; // Modernized CSS
 import { useDispatch } from "react-redux";
 import { accountFunding } from "./store";
-import { useNavigate } from "react-router";
 
-const CardPayment = () => {
-    let navigate = useNavigate();
-    const [amount, setAmount] = useState(Number); // Default amount in kobo (NGN)
+const Pay = () => {
+    const [amount, setAmount] = useState(2000); // Default amount in kobo (NGN)
     const dispatch = useDispatch();
 
     const handleToken = (token) => {
         if (token) {
             console.log("Payment successful:", token);
             dispatch(accountFunding(amount / 100)); // Convert kobo to naira for Redux store
-            navigate('/')
         } else {
             console.log("Payment error");
         }
@@ -31,9 +28,9 @@ const CardPayment = () => {
                         <input
                             id="amount"
                             type="number"
-                            value={amount / 100 || ''} // Display amount in naira
+                            value={amount / 100} // Display amount in naira
                             onChange={(e) => {
-                                const valueInNaira = parseFloat(e.target.value); // Handle empty or invalid inputs
+                                const valueInNaira = parseFloat(e.target.value || 0); // Handle empty or invalid inputs
                                 setAmount(valueInNaira * 100); // Convert naira to kobo
                             }}
                             placeholder="Enter amount (e.g., 2000)"
@@ -47,9 +44,10 @@ const CardPayment = () => {
                         amount={amount} // Amount in kobo
                         stripeKey="pk_test_51QT6InDFDXEbOPO35RWv9SY8YW9XrFy9Uv4IiUtcHN3Pcu58m25iV4kRAmgFukMoFsLlFrADzsdmbneV9tNyryOG006RSQfnxl"
                     />
+
                 </div>
             </div></div>
     );
 };
 
-export default CardPayment;
+export default Pay;

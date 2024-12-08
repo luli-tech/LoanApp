@@ -37,20 +37,20 @@ const TermsAndConditions = () => {
           </div>
           <div className="terms-actions">
             <button
-              className={`terms-btn accept-btn ${isAccepted === true ? "animate" : ""}`}
+              className={`terms-btn accept-btn `}
               onClick={handleAccept}
             >
               Accept
             </button>
             <button
-              className={`terms-btn reject-btn ${isAccepted === false ? "animate" : ""}`}
+              className={`terms-btn reject-btn`}
               onClick={handleReject}
             >
               Reject
             </button>
           </div>
           {isAccepted !== null && (
-            <div className={`status-message ${isAccepted ? "success" : "error"} fade-in`}>
+            <div className={`status-message`}>
               {isAccepted
                 ? "Thank you! Redirecting to your dashboard..."
                 : "Sorry to see you go. Redirecting to home..."}

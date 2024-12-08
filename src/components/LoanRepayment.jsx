@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { repayment, resetMessage } from "./store";
 import "./loanRepayment.css";
-import SuccessMessage from "./successmessage";
-import Error from "./error";
+// import SuccessMessage from "./successmessage";
+// import Error from "./error";
 
 const LoanRepayment = () => {
     const dispatch = useDispatch();
@@ -20,8 +20,9 @@ const LoanRepayment = () => {
 
         dispatch(
             repayment({
-                loanId: selectedLoan,
-                amount: parseFloat(repaymentAmount),
+                id: selectedLoan,
+                loanAmount: parseFloat(repaymentAmount),
+                id: selectedLoan,
             })
         );
 
@@ -66,7 +67,6 @@ const LoanRepayment = () => {
                     </div>
                 )}
             </div>
-            <Error />
         </div>
     );
 };

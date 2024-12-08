@@ -16,7 +16,7 @@ const Register = () => {
     email: "",
     password: "",
   });
-  const { user, redirect, message } = useSelector((state) => state.user);
+  const { user, redirect, successmessage } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (redirect) {
@@ -98,7 +98,7 @@ const Register = () => {
           </div>
         </div>
       </div>
-      {message && <Error />}
+      {successmessage && <Error />}
     </div>
   );
 };

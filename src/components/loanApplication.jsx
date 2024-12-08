@@ -10,15 +10,19 @@ import { useNavigate } from "react-router-dom";
 const LoanApplicationForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { ActiveUser, message, redirect } = useSelector((state) => state.user);
+  const { ActiveUser, successmesage, errormessage, redirect } = useSelector((state) => state.user);
+
   const [loanAmount, setLoanAmount] = useState("");
   const [tenure, setTenure] = useState(30);
   const [open, setOpen] = useState(false);
-  let date = new Date().toLocaleString()
+  const [error, setError] = useState(""); // For displaying validation errors
+
+  const date = new Date().toLocaleString();
 
   // Calculate loan details based on the selected tenure and loan amount
   const calculateLoanDetails = (amount) => {
-    const interestRate = 0.02; // 2% interest rate for all tenures
+    const rates = { 30: 0.02, 91: 0.03, 180: 0.05, 365: 0.08 }; // Dynamic interest rates
+    const interestRate = rates[tenure] || 0;
     const interest = amount * interestRate || 0;
     const totalAmountDue = amount + interest;
 
@@ -28,7 +32,7 @@ const LoanApplicationForm = () => {
   const { interestRate, interest, totalAmountDue } = calculateLoanDetails(
     parseFloat(loanAmount) || 0
   );
-  let suc = ActiveUser?.loans?.find(user => user.status === 'approved')
+
   // Redirect handling
   useEffect(() => {
     if (redirect) {
@@ -41,10 +45,11 @@ const LoanApplicationForm = () => {
     const amount = parseFloat(loanAmount) || 0;
 
 
+    setError(""); // Clear any previous error
     dispatch(
       getLoans({
         loan: {
-          date: date,
+          date,
           id: uuidv4(),
           loanAmount: amount,
           tenure,
@@ -54,8 +59,9 @@ const LoanApplicationForm = () => {
           status: "pending",
         },
       })
-    );
-    setOpen(true);
+    )
+    if (ActiveUser?.loans?.find(user => user.status !== 'approved'))
+      setOpen(true);
   };
 
   const closeDialog = () => {
@@ -80,7 +86,10 @@ const LoanApplicationForm = () => {
             }
             placeholder="₦ Enter amount (e.g., 10,000)"
           />
-          <p className="loan-range">Your loan amount range is ₦4,000 to ₦100,000</p>
+          <p className="loan-range">
+            Your loan amount range is ₦4,000 to ₦100,000
+          </p>
+          {error && <p className="error-message">{error}</p>}
         </div>
 
         {/* Loan Tenure Selector */}
@@ -97,19 +106,19 @@ const LoanApplicationForm = () => {
               className={`tenure-btn ${tenure === 91 ? "active" : ""}`}
               onClick={() => setTenure(91)}
             >
-              91 Days <br /> 2% Interest
+              91 Days <br /> 3% Interest
             </button>
             <button
               className={`tenure-btn ${tenure === 180 ? "active" : ""}`}
               onClick={() => setTenure(180)}
             >
-              6 Months <br /> 2% Interest
+              6 Months <br /> 5% Interest
             </button>
             <button
               className={`tenure-btn ${tenure === 365 ? "active" : ""}`}
               onClick={() => setTenure(365)}
             >
-              1 Year <br /> 2% Interest
+              1 Year <br /> 8% Interest
             </button>
           </div>
         </div>
@@ -132,14 +141,12 @@ const LoanApplicationForm = () => {
           </p>
         </div>
 
-        {/* Apply Button */}
         <button onClick={handleApplyLoan} className="apply-btn">
           Take This Loan
         </button>
-        {message && <Error />}
-
-        {/* <ConfirmationDialog setopen={setOpen} open={open} /> */}
-
+        {errormessage && <Error />}
+        {successmesage && <Error />}
+        {open && < ConfirmationDialog setopen={setOpen} open={open} />}
       </div>
     </div>
   );

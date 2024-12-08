@@ -9,6 +9,7 @@ import LoanStatus from "./components/loanStatus";
 import Homepage from "./components/homepage";
 import LoanHistory from "./components/loanHistory";
 import Login from "./components/Login";
+import Pay from "./components/pay";
 import Register from "./components/register";
 import UserProfile from "./components/userProfile";
 import TransactionSummary from "./components/transactionSummary";
@@ -62,7 +63,7 @@ function App() {
         <Route path="/ask" element={<LoanApplication />} />
         <Route path="/type" element={<Typewriter />} />
         <Route path="/card" element={<CardPAyment />} />
-
+        <Route path="/pay" element={<Pay />} />
         <Route path="/confirm" element={<ConfirmationDialog />} />
       </Route>
     )

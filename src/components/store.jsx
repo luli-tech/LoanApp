@@ -19,7 +19,8 @@ const initialState = {
   ],
   ActiveUser: JSON.parse(localStorage.getItem("activeUser")) || null,
   redirect: null,
-  message: null,
+  successmessage: null,
+  errormessage: null
 };
 
 // Utility function to safely set items in localStorage
@@ -36,17 +37,23 @@ const safeSetItem = (key, value) => {
   }
 };
 
-// Utility function to validate loan eligibility
 const validateLoanEligibility = (user, loanAmount) => {
+  // Validate loan amount range
   if (loanAmount < 4000 || loanAmount > 100000) {
-    return "Loan amount must be between ₦4,000 and ₦100,000";
+    return "Loan amount must be between ₦4,000 and ₦100,000.";
   }
+
+  // Validate user's age
   if (!user.age || user.age < 18) {
     return "You must be at least 18 years old to apply for a loan.";
   }
-  if (user.loans?.find((loan) => loan.status === "approved")) {
-    return "You have an unpaid loan.";
+
+  // Check for any unpaid loans
+  if (user.loans?.some((loan) => loan.status === "approved")) {
+    return "You have an unpaid loan. Please clear it before applying for another.";
   }
+
+  // If all validations pass, return null
   return null;
 };
 
@@ -61,13 +68,13 @@ const userSlice = createSlice({
         (user) => user.email === action.payload.email
       );
       if (existingUser) {
-        state.message = "User already exists";
+        state.errormessage = "User already exists";
         state.redirect = "/login";
       } else if (
         action.payload.name.length < 1 ||
         action.payload.password.length < 1
       ) {
-        state.message = "Name and password cannot be empty";
+        state.errormessage = "Name and password cannot be empty";
       } else {
         const newUser = {
           ...action.payload,
@@ -79,7 +86,7 @@ const userSlice = createSlice({
         };
         state.user.push(newUser);
         state.redirect = "/login";
-        state.message = "Account successfully created";
+        state.successmessage = "Account successfully created";
         safeSetItem("users", state.user);
       }
     },
@@ -100,25 +107,30 @@ const userSlice = createSlice({
           safeSetItem("activeUser", state.ActiveUser);
           safeSetItem("users", state.user);
         } else {
-          state.message = "Incorrect password";
+          state.errormessage = "Incorrect password";
+          return
         }
       } else {
-        state.message = "User not found";
+        state.errormessage = "User not found";
+        return
       }
     },
 
     // Action: Logout User
     logout: (state) => {
+      state.successmessage = 'logout success'
       if (state.ActiveUser) {
         state.user = state.user.map((user) =>
           user.id === state.ActiveUser.id
             ? { ...user, isAuthenticated: false }
             : user
         );
+        state.successmessage = 'logout success'
         state.ActiveUser = null;
         safeSetItem("users", state.user);
         localStorage.removeItem("activeUser");
       }
+      state.successmessage = 'logout success'
     },
 
     // Action: Update Profile
@@ -129,41 +141,50 @@ const userSlice = createSlice({
         state.user = state.user.map((user) =>
           user.id === updatedUser.id ? updatedUser : user
         );
+        state.successmessage = 'profile set sussessfuly'
         safeSetItem("activeUser", updatedUser);
         safeSetItem("users", state.user);
       }
     },
 
-    // Action: Apply for Loan
     getLoans: (state, action) => {
       if (!state.ActiveUser) {
-        state.message = "Please log in to apply for a loan!";
+        state.errormessage = "Please log in to apply for a loan!";
         return;
       }
 
-      let errorMessage = validateLoanEligibility(
-        state.ActiveUser,
-        action.payload.loan.loanAmount
-      );
+      const loanAmount = action.payload.loan.loanAmount;
+
+      // Validate loan eligibility
+      const errorMessage = validateLoanEligibility(state.ActiveUser, loanAmount);
       if (errorMessage) {
-        state.message = errorMessage;
+        state.errormessage = errorMessage; // Use error from validation function
         return;
       }
 
+      // Ensure loan amount is within valid range
+      if (loanAmount < 1 || loanAmount > 4000) {
+        state.errormessage = "Loan amount must be between 1 and 4000.";
+
+      }
+
+      // Loan is approved
       const updatedUser = {
         ...state.ActiveUser,
-        loans: [...(state.ActiveUser.loans || []), action.payload.loan],
+        loans: [...(state.ActiveUser.loans || []), action.payload.loan], // Add new loan to user's loan list
       };
 
+      // Update state
       state.ActiveUser = updatedUser;
       state.user = state.user.map((user) =>
         user.id === updatedUser.id ? updatedUser : user
       );
-      state.redirect = '/confirm'
-      safeSetItem("activeUser", updatedUser);
-      safeSetItem("users", state.user);
-      state.message = "Loan application successful!";
+      state.redirect = "/confirm"; // Mark redirect path
+      safeSetItem("activeUser", updatedUser); // Save user state to storage
+      safeSetItem("users", state.user); // Save all users to storage
+      state.successmessage = "Loan application successful!";
     },
+
 
     // Action: Confirm Loan
     confirmLoan: (state, action) => {
@@ -198,17 +219,17 @@ const userSlice = createSlice({
     },
     repayment: (state, action) => {
       if (!state.ActiveUser) {
-        state.message = "Please log in to repay a loan.";
+        state.errormessage = "Please log in to repay a loan.";
         return;
       }
 
-      const { loanId, amount } = action.payload;
+      const { id, loanAmount } = action.payload;
       let totalAmountDueExceeded = false;
 
       // Update loans to apply the repayment
       const updatedLoans = state.ActiveUser.loans?.map((loan) => {
-        if (loan.id === loanId && loan.status === "approved") {
-          const newTotal = loan.totalAmountDue - amount;
+        if (loan.id === id && loan.status === "approved") {
+          const newTotal = loan.totalAmountDue - loanAmount;
 
           if (newTotal < 0) {
             totalAmountDueExceeded = true; // Prevent overpayment
@@ -225,27 +246,27 @@ const userSlice = createSlice({
 
       // Prevent repayment if it exceeds total amount due
       if (totalAmountDueExceeded) {
-        state.message = "Repayment amount exceeds the total amount due.";
+        state.errormessage = "Repayment amount exceeds the total amount due.";
         return;
       }
 
       // Check if user balance is sufficient for repayment
-      if (state.ActiveUser.balance < amount) {
-        state.message = "Insufficient balance, please fund your account.";
+      if (state.ActiveUser.accountBalance < loanAmount) {
+        state.errormessage = "Insufficient balance, please fund your account.";
         return;
       }
 
       // Deduct repayment amount from user's balance
-      const updatedBalance = state.ActiveUser.balance - amount;
+      const updatedBalance = state.ActiveUser.accountBalance - loanAmount;
 
       // Update ActiveUser object
       const updatedUser = {
         ...state.ActiveUser,
         loans: updatedLoans,
-        balance: updatedBalance, // Deducted balance after repayment
+        accountBalance: updatedBalance, // Deducted balance after repayment
         repayments: [
           ...(state.ActiveUser.repayments || []),
-          { loanId, amount, date: new Date().toISOString() }, // Record repayment
+          { id, loanAmount, date: new Date().toISOString(), status: 'repayment' }, // Record repayment
         ],
       };
 
@@ -255,13 +276,13 @@ const userSlice = createSlice({
         user.id === updatedUser.id ? updatedUser : user
       );
 
-      state.message = "Repayment successful!";
+      state.successmessage = "Repayment successful!";
       safeSetItem("activeUser", updatedUser);
       safeSetItem("users", state.user);
     },
     accountFunding: (state, action) => {
       if (!state.ActiveUser) {
-        state.message = "Please log in to fund your account.";
+        state.errormessage = "Please log in to fund your account.";
         return;
       }
 
@@ -279,7 +300,7 @@ const userSlice = createSlice({
         user.id === updatedUser.id ? updatedUser : user
       );
 
-      state.message = "Account funded successfully!";
+      state.successmessage = "Account funded successfully!";
       safeSetItem("activeUser", updatedUser);
       safeSetItem("users", state.user);
     },

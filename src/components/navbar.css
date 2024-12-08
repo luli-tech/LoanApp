@@ -25,6 +25,7 @@
   position: fixed;
   top: 50px;
   bottom: 0;
+  padding-top: 60px;
   overflow-y: auto;
   z-index: 10000;
   transition: transform 0.3s ease-in-out;
@@ -33,9 +34,13 @@
 .sidebar > * {
   text-decoration: none;
 }
-
 .sidebar.open {
   transform: translateX(0);
+}
+.amounts {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
 }
 
 .sidebar-header {
@@ -51,6 +56,7 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  margin-top: 20px;
 }
 
 .sidebar-item {

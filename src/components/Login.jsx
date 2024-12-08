@@ -14,7 +14,7 @@ const Login = () => {
     navigate('/')
   }
   const dispatch = useDispatch();
-  const { message, redirect } = useSelector((state) => state.user);
+  const { errormessage, redirect } = useSelector((state) => state.user);
 
   const [users, setUser] = useState({
     email: "",
@@ -82,7 +82,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-      {message && <Error />}
+      {errormessage && <Error />}
     </div>
   );
 };

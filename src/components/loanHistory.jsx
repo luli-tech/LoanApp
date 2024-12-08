@@ -9,10 +9,10 @@ const LoanHistory = () => {
 
   // Defaulting approved and loans to empty arrays to avoid undefined errors
   const { loans = [], repayments = [] } = ActiveUser || {};
-
   // Filter for only approved loans
   const approvedLoans = loans.filter((loan) => loan.status === "approved");
-
+  let final = [...repayments, ...loans]
+  console.log(final)
   return (
     <div className="loan-history">
       <h2>Loan History</h2>
@@ -29,11 +29,11 @@ const LoanHistory = () => {
           </div>
 
           {/* Table rows */}
-          {loans.map((loan) => (
+          {final.map((loan, id) => (
             loan.id && (
               <NavLink
                 to={`/loan-details/${loan.id}`}
-                key={loan.id}
+                key={id}
                 className="loan-history-row-link"
               >
                 <div

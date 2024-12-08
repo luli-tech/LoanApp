@@ -44,7 +44,8 @@ const Navbar = () => {
             <NavLink onClick={toggleSidebar} to="/status" className="sidebar-item">Loan Status</NavLink>
             <NavLink onClick={toggleSidebar} to="/repay" className="sidebar-item">Repayment</NavLink>
             <NavLink onClick={toggleSidebar} to="/history" className="sidebar-item">Loan History</NavLink>
-            <button onClick={handleLogout} className="sidebar-item">Logout</button>
+            <NavLink to="/faq" onClick={toggleSidebar} className="sidebar-item">FAQ</NavLink>
+            <NavLink onClick={handleLogout} className="sidebar-item">Logout</NavLink>
           </>
         );
       } else {
@@ -56,6 +57,7 @@ const Navbar = () => {
             <NavLink to="/status" className="sidebar-item">Loan Status</NavLink>
             <NavLink to="/repay" className="sidebar-item">Repayment</NavLink>
             <NavLink to="/history" className="sidebar-item">Loan History</NavLink>
+            <NavLink to="/faq" className="sidebar-item">FAQ</NavLink>
             <NavLink onClick={handleLogout} className="sidebar-item">Logout</NavLink>
           </>
         );
@@ -89,8 +91,9 @@ const Navbar = () => {
               />
               <h3 className="user-name">{ActiveUser.name}</h3>
               <p className="user-status">Active</p>
-              <h3>Amount Due: ₦{realAmountDue.toFixed(2)}</h3>
-              <h3>Balance: ₦{Math.abs(ActiveUser.balance?.toFixed(2)) || "0.00"}</h3>
+              <div className="amounts"> <h5>Amount Due: ₦{realAmountDue.toFixed(2)}</h5>
+                <h5>LoanBalance: ₦{Math.abs(ActiveUser?.balance?.toFixed(2)) || "0.00"}</h5>
+                <h5>AccountBalance: ₦{Math.abs(ActiveUser?.accountBalance?.toFixed(2)) || "0.00"}</h5></div>
             </NavLink>
           ) : (
             <p className="user-status">Not Logged In</p>
