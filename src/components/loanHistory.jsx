@@ -10,8 +10,10 @@ const LoanHistory = () => {
   // Defaulting approved and loans to empty arrays to avoid undefined errors
   const { loans = [], repayments = [] } = ActiveUser || {};
   // Filter for only approved loans
-  const approvedLoans = loans.filter((loan) => loan.status === "approved");
-  let final = [...repayments, ...loans]
+  const approvedLoans = loans.filter((loan) => loan?.status === "approved");
+  let bro = [...repayments, ...loans]
+  let final = bro.sort((a, b) => new Date(b.date) - new Date(a.date));
+
   console.log(final)
   return (
     <div className="loan-history">
@@ -29,10 +31,10 @@ const LoanHistory = () => {
           </div>
 
           {/* Table rows */}
-          {final.map((loan, id) => (
-            loan.id && (
+          {final?.map((loan, id) => (
+            loan?.id && (
               <NavLink
-                to={`/loan-details/${loan.id}`}
+                to={`/loan-details/${loan?.id}`}
                 key={id}
                 className="loan-history-row-link"
               >

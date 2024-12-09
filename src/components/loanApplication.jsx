@@ -10,12 +10,11 @@ import { useNavigate } from "react-router-dom";
 const LoanApplicationForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { ActiveUser, successmesage, errormessage, redirect } = useSelector((state) => state.user);
-
+  const { ActiveUser, successmessage, errormessage, redirect } = useSelector((state) => state.user);
+  const loanExist = ActiveUser?.loans?.filter(user => user?.status === 'approved')
   const [loanAmount, setLoanAmount] = useState("");
   const [tenure, setTenure] = useState(30);
   const [open, setOpen] = useState(false);
-  const [error, setError] = useState(""); // For displaying validation errors
 
   const date = new Date().toLocaleString();
 
@@ -41,11 +40,19 @@ const LoanApplicationForm = () => {
     }
   }, [redirect, dispatch, navigate]);
 
+  // Handle applying for the loan
   const handleApplyLoan = () => {
     const amount = parseFloat(loanAmount) || 0;
 
+    // Reset erro
 
-    setError(""); // Clear any previous error
+    // Validation for loan amount range
+    // if (amount < 4000 || amount > 100000) {
+    //   setError("Loan amount must be between ₦4,000 and ₦100,000.");
+    //   return;
+    // }
+
+    // Dispatch the loan application to Redux store
     dispatch(
       getLoans({
         loan: {
@@ -59,11 +66,15 @@ const LoanApplicationForm = () => {
           status: "pending",
         },
       })
-    )
-    if (ActiveUser?.loans?.find(user => user.status !== 'approved'))
+    );
+
+    // If the user has an existing loan that's pending approval, open the confirmation dialog
+    if (ActiveUser?.loans?.find((user) => user.status !== 'approved')) {
       setOpen(true);
+    }
   };
 
+  // Close the confirmation dialog and reset messages
   const closeDialog = () => {
     dispatch(resetMessage());
     setOpen(false);
@@ -89,7 +100,7 @@ const LoanApplicationForm = () => {
           <p className="loan-range">
             Your loan amount range is ₦4,000 to ₦100,000
           </p>
-          {error && <p className="error-message">{error}</p>}
+          {/* {error && <p className="error-message">{error}</p>} */}
         </div>
 
         {/* Loan Tenure Selector */}
@@ -141,12 +152,17 @@ const LoanApplicationForm = () => {
           </p>
         </div>
 
+        {/* Apply for Loan Button */}
         <button onClick={handleApplyLoan} className="apply-btn">
           Take This Loan
         </button>
-        {errormessage && <Error />}
-        {successmesage && <Error />}
-        {open && < ConfirmationDialog setopen={setOpen} open={open} />}
+
+        {/* Error or Success Messages */}
+        {errormessage && <Error message={errormessage} />}
+        {successmessage && <Error message={successmessage} />}
+
+        {/* Confirmation Dialog */}
+        {!loanExist && <ConfirmationDialog setOpen={setOpen} open={open} closeDialog={closeDialog} />}
       </div>
     </div>
   );

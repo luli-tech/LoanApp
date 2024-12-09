@@ -5,6 +5,7 @@ import { Typed } from "react-typed";
 import { redirect } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Typewriter from "./typewriter";
+import { Link } from "react-router";
 
 const Homepage = () => {
   const [activeQuestion, setActiveQuestion] = useState(null);
@@ -61,9 +62,12 @@ const Homepage = () => {
             simple.
           </p>
           <div className="cta-buttons">
-            <button data-aos='fade-left' onClick={apply} className="cta-primary">
+            {!ActiveUser && <Link to='/login' data-aos='fade-left' className="cta-primary">
               Apply Now
-            </button>
+            </Link>}
+            {ActiveUser && <Link to='/terms' data-aos='fade-left' className="cta-primary">
+              Apply Now
+            </Link>}
             <button data-aos='fade-right' className="cta-secondary">Learn More</button>
           </div>
         </div>

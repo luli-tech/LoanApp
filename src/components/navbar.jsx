@@ -12,7 +12,7 @@ const Navbar = () => {
   const { ActiveUser } = useSelector((state) => state.user);
 
   // Calculate total amount due
-  const realAmountDue = ActiveUser?.loans?.filter((user) => user.status === 'approved')?.reduce((total, loan) => total + loan.totalAmountDue, 0) || 0;
+  const realAmountDue = ActiveUser?.loans?.filter((user) => user?.status === 'approved')?.reduce((total, loan) => total + loan.totalAmountDue, 0) || 0;
 
   // Sidebar open/close state
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 704);
@@ -31,6 +31,7 @@ const Navbar = () => {
   const handleLogout = () => {
     dispatch(logout());
     navigate("/");
+    toggleSidebar()
   };
 
   const renderLinks = () => {
@@ -65,7 +66,8 @@ const Navbar = () => {
     } else {
       // Render login option if user is not logged in
       return (
-        <NavLink to='/login' className="sidebar-item">
+
+        <NavLink onClick={toggleSidebar} to='/login' className="sidebar-item">
           Login
         </NavLink>
       );
@@ -83,18 +85,36 @@ const Navbar = () => {
       >
         <div className="sidebar-header">
           {ActiveUser ? (
-            <NavLink className="profile" to="/profile">
-              <img
-                className="user-pic"
-                src={ActiveUser.image || "/default-profile-image.jpg"}
-                alt="User Profile"
-              />
-              <h3 className="user-name">{ActiveUser.name}</h3>
-              <p className="user-status">Active</p>
-              <div className="amounts"> <h5>Amount Due: ₦{realAmountDue.toFixed(2)}</h5>
-                <h5>LoanBalance: ₦{Math.abs(ActiveUser?.balance?.toFixed(2)) || "0.00"}</h5>
-                <h5>AccountBalance: ₦{Math.abs(ActiveUser?.accountBalance?.toFixed(2)) || "0.00"}</h5></div>
-            </NavLink>
+            <>
+              {width ? (
+                <NavLink onClick={toggleSidebar} className="profile" to="/profile">
+                  <img
+                    className="user-pic"
+                    src={ActiveUser.image || "/default-profile-image.jpg"}
+                    alt="User Profile"
+                  />
+                  <h3 className="user-name">{ActiveUser.name}</h3>
+                  <p className="user-status">Active</p>
+                  <div className="amounts"> <h5>Amount Due: ₦{realAmountDue.toFixed(2)}</h5>
+                    <h5>LoanBalance: ₦{Math.abs(ActiveUser?.balance?.toFixed(2)) || "0.00"}</h5>
+                    <h5>AccountBalance: ₦{Math.abs(ActiveUser?.accountBalance?.toFixed(2)) || "0.00"}</h5></div>
+                </NavLink>) : <>
+                <NavLink className="profile" to="/profile">
+                  <img
+                    className="user-pic"
+                    src={ActiveUser.image || "/default-profile-image.jpg"}
+                    alt="User Profile"
+                  />
+                  <h3 className="user-name">{ActiveUser.name}</h3>
+                  <p className="user-status">Active</p>
+                  <div className="amounts"> <h5>Amount Due: ₦{realAmountDue.toFixed(2)}</h5>
+                    <h5>LoanBalance: ₦{Math.abs(ActiveUser?.balance?.toFixed(2)) || "0.00"}</h5>
+                    <h5>AccountBalance: ₦{Math.abs(ActiveUser?.accountBalance?.toFixed(2)) || "0.00"}</h5></div>
+                </NavLink></>}</>
+
+
+
+
           ) : (
             <p className="user-status">Not Logged In</p>
           )}

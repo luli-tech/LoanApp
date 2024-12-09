@@ -24,8 +24,6 @@ const Error = () => {
             dispatch(resetMessage());
         });
     }, [errormessage, dispatch]);
-
-    return null
 };
 
 export default Error;

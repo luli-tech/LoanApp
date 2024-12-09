@@ -1,22 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { repayment, resetMessage } from "./store";
 import "./loanRepayment.css";
-// import SuccessMessage from "./successmessage";
-// import Error from "./error";
+import SuccessMessage from "./successmessage";
+import Error from "./error";
 
 const LoanRepayment = () => {
     const dispatch = useDispatch();
-    const { ActiveUser, message } = useSelector((state) => state.user);
+    const { ActiveUser, message, errormessage, successmessage } = useSelector((state) => state.user);
 
     const [selectedLoan, setSelectedLoan] = useState("");
     const [repaymentAmount, setRepaymentAmount] = useState("");
-
+    // useEffect(() => {
+    //     if (errormessage) {
+    //         console.log('hello')
+    //     } else {
+    //         console.log('yoo')
+    //     }
+    // }, [errormessage])
     const handleRepayment = () => {
-        if (!selectedLoan || !repaymentAmount) {
-            alert("Please select a loan and enter an amount.");
-            return;
-        }
+        // if (!selectedLoan || !repaymentAmount) {
+        //     alert("Please select a loan and enter an amount.");
+        //     return;
+        // }
+
 
         dispatch(
             repayment({
@@ -44,7 +51,7 @@ const LoanRepayment = () => {
                     onChange={(e) => setSelectedLoan(e.target.value)}
                 >
                     <option value="">Select a Loan</option>
-                    {ActiveUser?.loans?.filter(status => status.status === 'approved')?.map((loan) => (
+                    {ActiveUser?.loans?.filter(status => status?.status === 'approved')?.map((loan) => (
                         <option key={loan.id} value={loan.id}>
                             Amount: {loan.totalAmountDue}
                         </option>
@@ -67,6 +74,8 @@ const LoanRepayment = () => {
                     </div>
                 )}
             </div>
+            {successmessage && <Error />}
+            {errormessage && <Error />}
         </div>
     );
 };

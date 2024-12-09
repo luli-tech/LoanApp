@@ -14,7 +14,7 @@ const Login = () => {
     navigate('/')
   }
   const dispatch = useDispatch();
-  const { errormessage, redirect } = useSelector((state) => state.user);
+  const { errormessage, redirect, successmessage } = useSelector((state) => state.user);
 
   const [users, setUser] = useState({
     email: "",
@@ -23,8 +23,10 @@ const Login = () => {
   useEffect(() => {
     if (redirect) {
       navigate(redirect)
+      errormessage
+      successmessage
     }
-  }, [redirect])
+  }, [redirect, successmessage, errormessage])
 
   const trackLogin = (e) => {
     setUser({ ...users, [e.target.name]: e.target.value });
@@ -83,6 +85,7 @@ const Login = () => {
         </div>
       </div>
       {errormessage && <Error />}
+      {successmessage && <Error />}
     </div>
   );
 };
