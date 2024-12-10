@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 import { newUser } from "./store";
 import "./register.css";
-import Error from "./error";
+
 
 const Register = () => {
   const navigate = useNavigate();
@@ -16,8 +16,7 @@ const Register = () => {
     email: "",
     password: "",
   });
-  const { user, redirect, successmessage } = useSelector((state) => state.user);
-
+  const { redirect } = useSelector((state) => state.user);
   useEffect(() => {
     if (redirect) {
       navigate(redirect);
@@ -98,7 +97,6 @@ const Register = () => {
           </div>
         </div>
       </div>
-      {successmessage && <Error />}
     </div>
   );
 };

@@ -1,20 +1,28 @@
-import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./TermsLoan.css";
-import Spinner from "./spinner";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { terms } from "./store";
 
 const TermsAndConditions = () => {
-  const [isAccepted, setIsAccepted] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { redirect } = useSelector((state) => state.user);
+
+  // Navigate based on the redirect value
+  useEffect(() => {
+    if (redirect) {
+      navigate(redirect);
+    }
+  }, [redirect, navigate]);
 
   const handleAccept = () => {
-    setIsAccepted(true);
-    navigate("/apply"); // Redirect after the spin animation
+    dispatch(terms({ terms: "accepted" }));
   };
 
   const handleReject = () => {
-    setIsAccepted(false);
-    navigate("/"); // Redirect after the spin animation
+    dispatch(terms({ terms: "rejected" }));
   };
 
   return (
@@ -36,29 +44,15 @@ const TermsAndConditions = () => {
             <p>Declining the terms will restrict your access to certain features.</p>
           </div>
           <div className="terms-actions">
-            <button
-              className={`terms-btn accept-btn `}
-              onClick={handleAccept}
-            >
+            <button className="terms-btn accept-btn" onClick={handleAccept}>
               Accept
             </button>
-            <button
-              className={`terms-btn reject-btn`}
-              onClick={handleReject}
-            >
+            <a href='' className="terms-btn reject-btn" onClick={handleReject}>
               Reject
-            </button>
+            </a>
           </div>
-          {isAccepted !== null && (
-            <div className={`status-message`}>
-              {isAccepted
-                ? "Thank you! Redirecting to your dashboard..."
-                : "Sorry to see you go. Redirecting to home..."}
-            </div>
-          )}
         </div>
       </div>
-      {isAccepted && <Spinner />}
     </div>
   );
 };

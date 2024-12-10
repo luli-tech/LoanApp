@@ -4,12 +4,13 @@ import { logout } from "./store";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import Footer from "./footer";
+import Error from "./error";
 import "./navbar.css";
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { ActiveUser } = useSelector((state) => state.user);
+  const { ActiveUser, errormessage, successmessage } = useSelector((state) => state.user);
 
   // Calculate total amount due
   const realAmountDue = ActiveUser?.loans?.filter((user) => user?.status === 'approved')?.reduce((total, loan) => total + loan.totalAmountDue, 0) || 0;
@@ -136,6 +137,8 @@ const Navbar = () => {
         </nav>
         <div className="outlet">
           <Outlet />
+          {errormessage && <Error />}
+          {successmessage && <Error />}
         </div>
         <Footer />
       </div>

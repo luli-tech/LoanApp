@@ -157,10 +157,6 @@ const LoanApplicationForm = () => {
           Take This Loan
         </button>
 
-        {/* Error or Success Messages */}
-        {errormessage && <Error message={errormessage} />}
-        {successmessage && <Error message={successmessage} />}
-
         {/* Confirmation Dialog */}
         {!loanExist && <ConfirmationDialog setOpen={setOpen} open={open} closeDialog={closeDialog} />}
       </div>

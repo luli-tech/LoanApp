@@ -15,25 +15,18 @@ const Homepage = () => {
     (state) => state.user || { ActiveUser: null }
   );
 
-  useEffect(() => {
-    ActiveUser;
-  }, [ActiveUser]);
+
 
   function apply() {
-    if (ActiveUser) {
-
-      navigate("/terms")
-
+    if (ActiveUser?.isAuthenticated) {
+      navigate('/terms');
     } else {
-
-      navigate("/login")
-
+      navigate('/login');
     }
   }
 
-  useEffect(() => {
-    console.log(ActiveUser);
-  }, [ActiveUser]); // Logs ActiveUser whenever it changes
+
+
 
   const handleToggleQuestion = (index) => {
     setActiveQuestion((prevIndex) => (prevIndex === index ? null : index));
@@ -62,14 +55,16 @@ const Homepage = () => {
             simple.
           </p>
           <div className="cta-buttons">
-            {!ActiveUser && <Link to='/login' data-aos='fade-left' className="cta-primary">
+            <button
+              onClick={apply} // Trigger the apply function on button click
+              data-aos="fade-left"
+              className="cta-primary"
+            >
               Apply Now
-            </Link>}
-            {ActiveUser && <Link to='/terms' data-aos='fade-left' className="cta-primary">
-              Apply Now
-            </Link>}
-            <button data-aos='fade-right' className="cta-secondary">Learn More</button>
+            </button>
+            <button data-aos="fade-right" className="cta-secondary">Learn More</button>
           </div>
+
         </div>
       </section>
 

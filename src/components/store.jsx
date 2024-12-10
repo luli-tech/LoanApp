@@ -94,7 +94,6 @@ const userSlice = createSlice({
           );
           state.ActiveUser = updatedUser;
           state.successmessage = "Login success";
-          state.redirect = "/";
           safeSetItem("activeUser", state.ActiveUser);
           safeSetItem("users", state.user);
         } else {
@@ -111,6 +110,7 @@ const userSlice = createSlice({
             ? { ...user, isAuthenticated: false }
             : user
         );
+        state.redirect = '/login'
         state.ActiveUser = null;
         safeSetItem("users", state.user);
         localStorage.removeItem("activeUser");
@@ -129,6 +129,28 @@ const userSlice = createSlice({
         safeSetItem("users", state.user);
       }
     },
+    terms: (state, action) => {
+      const { terms } = action.payload; // Extract only the terms field
+      if (!state.ActiveUser) return;
+
+      if (terms === "accepted") {
+        state.redirect = '/apply'
+        state.successmessage = "Terms accepted";
+      } else if (terms === "rejected") {
+        state.errormessage = "Loan not available at the moment";
+        state.redirect = "/";
+      }
+
+      const updatedUser = { ...state.ActiveUser, terms };
+      state.ActiveUser = updatedUser;
+      state.user = state.user.map((user) =>
+        user.id === updatedUser.id ? updatedUser : user
+      );
+
+      safeSetItem("activeUser", updatedUser);
+      safeSetItem("users", state.user);
+    },
+
     getLoans: (state, action) => {
       if (!state.ActiveUser) {
         state.errormessage = "Please log in to apply for a loan!";
@@ -295,6 +317,7 @@ export const {
   repayment,
   resetredirect,
   accountFunding,
+  terms
 } = userSlice.actions;
 
 // Configure Redux store
