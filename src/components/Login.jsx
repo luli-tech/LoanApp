@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "./store";
+import { login, resetredirect } from "./store";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
 
@@ -10,17 +10,18 @@ import { NavLink } from "react-router-dom";
 const Login = () => {
   let navigate = useNavigate()
   const dispatch = useDispatch();
-  const { redirect } = useSelector((state) => state.user);
+  const { redirect, resetredirect } = useSelector((state) => state.user);
 
   const [users, setUser] = useState({
     email: "",
     password: "",
   });
-  useEffect(() => {
-    if (redirect) {
-      navigate(redirect)
-    }
-  }, [redirect])
+  // useEffect(() => {
+  //   if (redirect) {
+  //     navigate(redirect)
+  //     resetredirect(redirect
+  //   }
+  // }, [redirect, resetredirect])
 
   const trackLogin = (e) => {
     setUser({ ...users, [e.target.name]: e.target.value });
@@ -29,6 +30,7 @@ const Login = () => {
   const getUser = (e) => {
     e.preventDefault();
     dispatch(login(users));
+    navigate('/')
   };
 
   return (

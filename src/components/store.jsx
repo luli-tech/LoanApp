@@ -75,8 +75,8 @@ const userSlice = createSlice({
           loanBalance: 0,
           accountBalance: 0,
         };
-        state.user.push(newUser);
         state.redirect = "/login";
+        state.user.push(newUser);
         state.successmessage = "Account successfully created";
         safeSetItem("users", state.user);
       }
@@ -91,16 +91,18 @@ const userSlice = createSlice({
           state.user = state.user.map((user) =>
             user.id === updatedUser.id ? updatedUser : user
           );
-          state.redirect = '/'
+
           state.ActiveUser = updatedUser;
           state.successmessage = "Login success";
           safeSetItem("activeUser", state.ActiveUser);
           safeSetItem("users", state.user);
         } else {
           state.errormessage = "Incorrect password";
+          return
         }
       } else {
         state.errormessage = "User not found";
+        return
       }
     },
     logout: (state) => {
@@ -110,7 +112,6 @@ const userSlice = createSlice({
             ? { ...user, isAuthenticated: false }
             : user
         );
-        state.redirect = '/login'
         state.ActiveUser = null;
         safeSetItem("users", state.user);
         localStorage.removeItem("activeUser");

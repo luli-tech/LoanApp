@@ -57,15 +57,13 @@ const Homepage = () => {
             simple.
           </p>
           <div className="cta-buttons">
-            {ActiveUser?.isAuthenticated && (<><a
-              href="/terms"
-              // onClick={apply}  // Trigger the apply function on button click
+            <button
+              onClick={apply} // Trigger the apply function on button click
               data-aos="fade-left"
               className="cta-primary"
             >
               Apply Now
-            </a></>)}
-
+            </button>
             <button data-aos="fade-right" className="cta-secondary">Learn More</button>
           </div>
 

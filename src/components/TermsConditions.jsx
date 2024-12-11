@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import "./TermsLoan.css";
 import { useEffect } from "react";
+import { resetredirect } from "./store";
 import { useDispatch, useSelector } from "react-redux";
 import { terms } from "./store";
 
@@ -13,9 +14,10 @@ const TermsAndConditions = () => {
   // Navigate based on the redirect value
   useEffect(() => {
     if (redirect) {
-      navigate(redirect);
+      navigate(redirect)
+      dispatch(resetredirect())
     }
-  }, [redirect, navigate]);
+  }, [redirect, navigate, resetredirect]);
 
   const handleAccept = () => {
     dispatch(terms({ terms: "accepted" }));
@@ -47,9 +49,9 @@ const TermsAndConditions = () => {
             <button className="terms-btn accept-btn" onClick={handleAccept}>
               Accept
             </button>
-            <a href='' className="terms-btn reject-btn" onClick={handleReject}>
+            <button className="terms-btn reject-btn" onClick={handleReject}>
               Reject
-            </a>
+            </button>
           </div>
         </div>
       </div>
