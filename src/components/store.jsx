@@ -1,7 +1,6 @@
-import { createSlice, configureStore } from "@reduxjs/toolkit";
-import { redirect } from "react-router-dom";
+import { createSlice, configureStore, createAsyncThunk } from "@reduxjs/toolkit";
 
-// Initial State
+
 const initialState = {
   user: JSON.parse(localStorage.getItem("users")) || [
     {
@@ -92,6 +91,7 @@ const userSlice = createSlice({
           state.user = state.user.map((user) =>
             user.id === updatedUser.id ? updatedUser : user
           );
+          state.redirect = '/'
           state.ActiveUser = updatedUser;
           state.successmessage = "Login success";
           safeSetItem("activeUser", state.ActiveUser);

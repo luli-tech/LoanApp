@@ -21,7 +21,8 @@ import Typewriter from "./components/typewriter";
 import Error from "./components/error";
 import CardPAyment from "./components/cardPAyment";
 import LoanRepayment from "./components/LoanRepayment";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { db } from "./components/config/config";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -30,6 +31,12 @@ import {
 } from "react-router-dom";
 
 function App() {
+  const [laon, setloan] = useState([])
+  useEffect(() => {
+    async function loanList() {
+      setloan(db)
+    }
+  }, [])
   // Memoizing the AOS configuration
   const aosConfig = useMemo(() => ({
     duration: 2000, // Animation duration in milliseconds

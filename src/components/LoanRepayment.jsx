@@ -29,7 +29,6 @@ const LoanRepayment = () => {
             repayment({
                 id: selectedLoan,
                 loanAmount: parseFloat(repaymentAmount),
-                id: selectedLoan,
             })
         );
 

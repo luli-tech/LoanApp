@@ -34,3 +34,9 @@ body::-webkit-scrollbar {
     padding: 10px;
   }
 }
+html {
+  scroll-behavior: smooth;
+}
+body {
+  scroll-behavior: smooth;
+}

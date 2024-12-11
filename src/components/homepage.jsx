@@ -6,6 +6,7 @@ import { redirect } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Typewriter from "./typewriter";
 import { Link } from "react-router";
+import { use } from "react";
 
 const Homepage = () => {
   const [activeQuestion, setActiveQuestion] = useState(null);
@@ -14,11 +15,12 @@ const Homepage = () => {
   const { ActiveUser } = useSelector(
     (state) => state.user || { ActiveUser: null }
   );
-
+  useEffect(() => {
+  }, [ActiveUser, apply])
 
 
   function apply() {
-    if (ActiveUser?.isAuthenticated) {
+    if (ActiveUser) {
       navigate('/terms');
     } else {
       navigate('/login');
@@ -55,13 +57,15 @@ const Homepage = () => {
             simple.
           </p>
           <div className="cta-buttons">
-            <button
-              onClick={apply} // Trigger the apply function on button click
+            {ActiveUser?.isAuthenticated && (<><a
+              href="/terms"
+              // onClick={apply}  // Trigger the apply function on button click
               data-aos="fade-left"
               className="cta-primary"
             >
               Apply Now
-            </button>
+            </a></>)}
+
             <button data-aos="fade-right" className="cta-secondary">Learn More</button>
           </div>
 
