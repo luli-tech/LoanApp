@@ -19,13 +19,13 @@
 
 /* Sidebar styles */
 .sidebar {
-  width: 250px;
+  width: 200px;
   background-color: #2c3e50;
   color: #ecf0f1;
   position: fixed;
   top: 50px;
   bottom: 0;
-  padding-top: 60px;
+  padding-top: 30px;
   overflow-y: auto;
   z-index: 10000;
   transition: transform 0.3s ease-in-out;
@@ -38,31 +38,32 @@
   transform: translateX(0);
 }
 .amounts {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  text-align: left;
 }
 
 .sidebar-header {
-  padding: 20px;
+  padding: 10px;
   text-align: center;
   display: flex;
   align-items: center;
-  gap: 20px;
-  height: 15rem;
+  height: fit-content;
 }
 
 .sidebar-menu {
   list-style: none;
   padding: 0;
   margin: 0;
-  margin-top: 20px;
+  margin-top: 5px;
 }
 
 .sidebar-item {
   display: block;
   padding: 15px 20px;
   color: #ecf0f1;
+  border-top: 1px solid white;
   text-decoration: none;
   font-size: 16px;
   transition: background 0.3s;
@@ -103,7 +104,7 @@
 /* Outlet styles */
 .outlet {
   flex: 1;
-  margin-left: 250px;
+  margin-left: 200px;
   margin-top: 60px;
   padding: 0 2px 0px 20px;
   background: #ecf0f1;
